@@ -48,7 +48,7 @@ function addAi() {
   const el = document.createElement("div");
   el.className = "msg ai";
   el.innerHTML = `
-    <div class="avatar"><img src="assets/mark.svg" alt="" /></div>
+    <div class="avatar"><img src="assets/logo.svg" alt="" /></div>
     <div class="body">
       <div class="name">HORÁCIO<span>${time()}</span></div>
       <div class="text"><span class="typing"><i></i><i></i><i></i></span></div>
