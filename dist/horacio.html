@@ -1253,6 +1253,8 @@ $("#scrim").addEventListener("click", () => toggleMenu(false));
         if (stopped) { row.set("stop", ""); continue; }
         row.set("ok", r && r.target ? (r.target.name || r.target.ref || "") : "");
         if (action === "ui.snapshot") renderSnapshot(card, r || {});
+        // menus e janelas abrem com animação: dá tempo antes do próximo passo
+        if (action === "ui.click" && i < steps.length - 1) await new Promise((z) => setTimeout(z, 350));
       } catch (e) {
         if (stopped) { row.set("stop", stopped); continue; }
         let msg = e.message;

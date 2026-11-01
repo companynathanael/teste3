@@ -13,6 +13,13 @@
        { selector: "#s-key", reason: "Chave de API" }
      ]
    });
+
+   Origem: companynathanael/Hor-cio-Jarvis, integrations/asafe-ui.js (commit 6a26f59).
+   Ajustes do Miquéias na revisão:
+   - o aviso "está operando" e o cursor aparecem sempre na primeira ação ui.*,
+     mesmo sem um ui.control antes (nada de controle invisível);
+   - um elemento só conta como visível se nenhum ancestral estiver transparente
+     ou invisível (menus fechados e a janela de configurações fechada somem).
    ========================================================= */
 (function (root) {
   const norm = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
@@ -37,8 +44,11 @@
       if (el.closest("[data-asafe-ui]") || el.closest("[aria-hidden=true]") || el.closest("[hidden]") || el.closest("[inert]")) return false;
       const r = el.getBoundingClientRect();
       if (r.width < 1 || r.height < 1) return false;
-      const st = getComputedStyle(el);
-      return st.visibility !== "hidden" && st.display !== "none" && Number(st.opacity) > 0.02;
+      for (let n = el; n && n !== document.documentElement; n = n.parentElement) {
+        const st = getComputedStyle(n);
+        if (st.visibility === "hidden" || st.display === "none" || Number(st.opacity) <= 0.02) return false;
+      }
+      return true;
     };
     const refOf = (el) => { let r = ids.get(el); if (!r) { r = "e" + ++seq; ids.set(el, r); } refs.set(r, el); return r; };
     const roleOf = (el) => {
@@ -283,7 +293,15 @@
       "ui.scroll": "Rola a tela. payload: { direction: up|down|top|bottom }",
       "ui.wait": "Espera um texto aparecer ou o agente terminar. payload: { text? , idle?, timeout? }"
     };
-    for (const name of Object.keys(actions)) link.handle(name, actions[name], desc[name]);
+    // Toda ação ui.* acende o aviso com o botão Parar: o controle nunca fica invisível.
+    const announced = (name, fn) => async (p, ctx) => {
+      if (name !== "ui.control" && !control.on && !control.stopped) {
+        control = { on: true, by: ctx.from, stopped: false };
+        showUI(ctx.from);
+      }
+      return fn(p || {}, ctx);
+    };
+    for (const name of Object.keys(actions)) link.handle(name, announced(name, actions[name]), desc[name]);
     return { collect, find };
   }
 
