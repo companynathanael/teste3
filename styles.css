@@ -268,3 +268,36 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ---------- Asafe: mensagens de outros agentes ---------- */
+.pulse.off { background: var(--ink-3); animation: none; box-shadow: none; }
+.msg.ai .text { white-space: pre-wrap; }
+.msg.ai.agent .agent-avatar {
+  display: grid; place-items: center; border-radius: 50%;
+  font-size: 10.5px; font-weight: 600; letter-spacing: .04em;
+  background: linear-gradient(160deg, var(--glass-hi), var(--glass)); border: 1px solid var(--line-2); color: var(--ink);
+}
+.msg.ai.agent .via { padding: 1px 6px; border-radius: 6px; border: 1px solid var(--line-2); color: var(--ink-2); letter-spacing: .06em; text-transform: uppercase; font-size: 9.5px; }
+.msg.ai.agent .route { font-size: 10.5px; color: var(--ink-3); margin: -2px 0 6px; letter-spacing: .02em; }
+.msg.ai.agent .route:empty { display: none; }
+.msg.ai.agent.failed .text { color: var(--ink-3); font-style: italic; }
+
+/* ---------- Respostas formatadas (Markdown) ---------- */
+.msg.ai .text.md { white-space: normal; }
+.text.md > * + * { margin-top: .7em; }
+.text.md h3, .text.md h4, .text.md h5, .text.md h6 { font-family: var(--f-display); font-weight: 600; color: var(--ink); letter-spacing: -.01em; line-height: 1.25; }
+.text.md h3 { font-size: 1.2em; } .text.md h4 { font-size: 1.08em; } .text.md h5, .text.md h6 { font-size: 1em; }
+.text.md strong { color: var(--ink); font-weight: 600; }
+.text.md ul, .text.md ol { padding-left: 1.3em; }
+.text.md li + li { margin-top: .25em; }
+.text.md li::marker { color: var(--ink-3); }
+.text.md code { font-family: var(--f-mono); font-size: .88em; padding: 1px 6px; border-radius: 6px; background: var(--glass-2); border: 1px solid var(--line); color: var(--ink); }
+.text.md pre { padding: 12px 14px; border-radius: var(--r-sm); background: rgba(0,0,0,.35); border: 1px solid var(--line); overflow-x: auto; }
+.text.md pre code { padding: 0; border: 0; background: none; font-size: 13px; }
+.text.md blockquote { padding: 2px 0 2px 12px; border-left: 2px solid var(--line-2); color: var(--ink-3); }
+.text.md hr { border: 0; border-top: 1px solid var(--line); }
+.md-table { overflow-x: auto; border-radius: var(--r-sm); border: 1px solid var(--line); }
+.text.md table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+.text.md th, .text.md td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--line); }
+.text.md th { font-family: var(--f-display); font-weight: 600; color: var(--ink); background: var(--glass); }
+.text.md tr:last-child td { border-bottom: 0; }

@@ -68,8 +68,10 @@ form.addEventListener("submit", (e) => {
   if (!text) return;
   welcome.hidden = true;
   thread.hidden = false;
-  addUser(text);
-  addAi();
+  if (!(window.horacioAsafe && window.horacioAsafe.handle(text))) {
+    addUser(text);
+    addAi();
+  }
   input.value = "";
   input.style.height = "auto";
   send.disabled = true;
