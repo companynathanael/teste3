@@ -256,7 +256,7 @@
         } else {
           note.textContent = "Enviando ao núcleo do agente…";
           form.remove();
-          link.request(from, "agent.say", { text: reply }, { timeout: 120000 })
+          link.request(from, "agent.say", { text: reply, inReplyTo: true }, { timeout: 120000 })
             .then((r) => { note.textContent = "Enviado ao núcleo."; if (r && r.reply) { const v = showAgent(from, `Núcleo · resposta`); v.set(String(r.reply)); } })
             .catch((err) => { note.textContent = `Não consegui enviar: ${err.message}`; });
         }

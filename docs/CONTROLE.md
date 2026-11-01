@@ -98,4 +98,4 @@ Continuam como antes: controle preciso (`clique`, `digite`, `role`, `espere`, `l
 
 ## `chat.say` (ação do Horácio)
 
-`chat.say { text, from }` → `{ reply, from }`. Outro agente fala com o Horácio. A mensagem aparece na conversa com o campo **Responder**. O Horácio ainda não tem núcleo de IA, então **quem responde é o Sr. Nathanael**: nenhuma resposta é inventada. Se ninguém responder em 80 s, volta `{ reply: null, note }`; uma resposta posterior é enviada ao núcleo do agente por `agent.say`.
+`chat.say { text, from }` → `{ reply, from }`. Outro agente fala com o Horácio. A mensagem aparece na conversa com o campo **Responder**. O Horácio ainda não tem núcleo de IA, então **quem responde é o Sr. Nathanael**: nenhuma resposta é inventada. Se ninguém responder em 80 s, volta `{ reply: null, note }`; uma resposta posterior é enviada ao núcleo do agente por `agent.say { text, inReplyTo: true }`.
