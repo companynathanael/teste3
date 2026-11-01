@@ -174,5 +174,5 @@
     return true;
   }
 
-  window.horacioAsafe = { link, handle, parse, nameOf, knownIds, norm, md, horacioSays, showAgent };
+  window.horacioAsafe = { link, handle, parse, nameOf, knownIds, norm, md, horacioSays, showAgent, ask };
 })();

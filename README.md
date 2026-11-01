@@ -39,5 +39,8 @@ Exemplos: `Miquéias, leia a tela` · `Miquéias, clique em Nova conversa; digit
 ## Etapa 2.3 — Permissões do Asafe
 `asafe-permissoes.js`: antes de usar o núcleo de outra IA, o Horácio pede permissão ao Asafe (`permission.request`), por agente e escopo (conversa, pesquisa, trade, piloto, controle de tela…). Sem permissão, nada é executado. Na barra lateral, **Núcleos externos** mostra as permissões ativas e a chave **Operar o Miquéias**. Comandos: `pare de operar no Miquéias`, `volte a operar no Miquéias`, `/parar`, `/permissoes`, `/soltar miqueias`. Especificação: [`docs/PERMISSOES.md`](docs/PERMISSOES.md).
 
+## Etapa 2.4 — Ordens em português e conversa entre núcleos
+`asafe-agentes.js`: ordens em português executadas pelo próprio Miquéias (`agent.do`), `/manual miqueias`, `diga ao Miquéias que …` (núcleo) e a ação `chat.say`, para o Miquéias falar com o Horácio e o Sr. Nathanael responder. `asafe-link.js` atualizado para o SDK 2 do Asafe (espera a permissão sem estourar o prazo).
+
 ## Arquivo único
 `python3 tools/build-single.py` gera `dist/horacio.html` com tudo embutido, para abrir com dois cliques no Chrome.

@@ -23,7 +23,8 @@
   const SCOPE_LABEL = { conversa: "conversa", pesquisa: "pesquisa", "trade.leitura": "trade (leitura)", "trade.piloto": "piloto automático", controle: "controle de tela", configuracao: "configurações", outros: "outras funções" };
 
   function scopeOf(action) {
-    if (/^chat\./.test(action)) return "conversa";
+    if (/^chat\./.test(action) || action === "agent.say" || action === "agent.manual") return "conversa";
+    if (action === "agent.do") return "controle"; // o Miquéias executa ações na própria tela
     if (action === "research.run") return "pesquisa";
     if (action === "trade.status" || action === "trade.study") return "trade.leitura";
     if (action === "trade.autopilot") return "trade.piloto";
@@ -148,6 +149,36 @@
     }
     H.horacioSays(`O Asafe retirou a permissão de ${scope ? SCOPES[scope] || scope : "usar o núcleo do"} ${nameOf(to)}.`);
   });
+
+  /* ---------- aviso "aguardando sua permissão no Asafe" ---------- */
+  // O Asafe pode segurar um pedido até o Sr. Nathanael aceitar ou recusar na aba Permissões.
+  const ACTION_LABEL = {
+    "chat.ask": "conversa", "chat.new": "nova conversa", "research.run": "pesquisa", "trade.status": "situação do trade",
+    "trade.study": "estudo de trade", "trade.autopilot": "piloto automático", "agent.do": "ordem", "agent.say": "mensagem ao núcleo",
+    "agent.manual": "manual", "permission.request": "permissão",
+  };
+  const waiting = new Map(); // id do pedido -> ação
+  const pill = document.createElement("div");
+  pill.className = "perm-pill mono";
+  pill.hidden = true;
+  pill.setAttribute("role", "status");
+  const composerEl = document.querySelector("#composer");
+  composerEl.parentNode.insertBefore(pill, composerEl);
+  function paintPill() {
+    if (!waiting.size) { pill.hidden = true; return; }
+    const names = [...new Set([...waiting.values()].map((a) => ACTION_LABEL[a] || (/^ui\./.test(a) ? "controle de tela" : a)))];
+    pill.textContent = `◌ Aguardando sua permissão no Asafe · ${names.join(", ")}`;
+    pill.hidden = false;
+  }
+  if (link.on && typeof link.on === "function") {
+    try {
+      link.on("permission", ({ id, state, action }) => {
+        if (state === "pending") waiting.set(id, action || "pedido"); else waiting.delete(id);
+        paintPill();
+      });
+    } catch (e) { /* SDK antigo, sem o aviso de permissão */ }
+    link.on("message", (env) => { if (env.type === "response" && waiting.delete(env.replyTo)) paintPill(); });
+  }
 
   /* ---------- chave "Operar o …" ---------- */
   async function setControl(to, on, silent) {

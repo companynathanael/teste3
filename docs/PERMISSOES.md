@@ -14,11 +14,11 @@ Cada ação de outro agente pertence a um escopo. A permissão é dada por **age
 
 | Escopo | Ações | Descrição para o Sr. Nathanael |
 | --- | --- | --- |
-| `conversa` | `chat.ask`, `chat.new` | conversar com o agente |
+| `conversa` | `chat.*`, `agent.say`, `agent.manual` | conversar com o agente / ler o manual dele |
 | `pesquisa` | `research.run` | pesquisar na web pelo agente |
 | `trade.leitura` | `trade.status`, `trade.study` | ver e estudar o Laboratório de Trade |
 | `trade.piloto` | `trade.autopilot` | ligar/desligar o piloto automático (dinheiro fictício) |
-| `controle` | `ui.*` | operar a tela do agente (ler, clicar, digitar…) |
+| `controle` | `ui.*`, `agent.do` | operar a tela do agente (ler, clicar, digitar, ordens em português) |
 | `configuracao` | `settings.*` | mudar configurações do agente |
 | `outros` | qualquer outra ação | ação sem escopo conhecido |
 
@@ -58,3 +58,7 @@ Sem permissão: `ping` e `ui.control { on: false }` (desligar o controle **sempr
   - `volte a operar no Miquéias` · `/operar miqueias` → liga a chave
   - `/permissoes` → lista as permissões ativas
   - `/soltar miqueias` → devolve todas as permissões do Miquéias
+
+## Pedido retido pelo Asafe (SDK 2)
+
+Além das permissões por escopo, o Asafe pode **segurar cada pedido** até o Sr. Nathanael aceitar ou recusar na aba Permissões. O `asafe-link.js` (SDK 2, cópia de `Asafe/sdk/asafe-link.js`) pausa o prazo do pedido enquanto ele espera e emite `link.on("permission", { id, state, action })`. O Horácio mostra acima da caixa de mensagem: **"◌ Aguardando sua permissão no Asafe · …"**, que some quando o pedido é liberado ou respondido.

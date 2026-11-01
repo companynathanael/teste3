@@ -429,3 +429,30 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .ext-chips { display: flex; flex-wrap: wrap; gap: 5px; }
 .ext-chip { font-size: 10px; padding: 2px 7px; border-radius: 7px; border: 1px solid var(--line-2); color: var(--ink-2); letter-spacing: .02em; }
 .ext-chip:hover { color: var(--ink); background: var(--glass-hi); }
+
+.perm-pill {
+  max-width: 760px; margin: 0 auto 8px; padding: 7px 12px; border-radius: 12px;
+  font-size: 11.5px; color: var(--ink); letter-spacing: .02em;
+  border: 1px dashed var(--line-2); background: rgba(255,255,255,.04);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  animation: rise .3s var(--ease) both;
+}
+
+/* ---------- Ordens em português e conversa entre núcleos ---------- */
+.goal-text { font-size: 14px; color: var(--ink-2); margin: -2px 0 10px; }
+.goal-out:empty { display: none; }
+.goal-out { margin-top: 10px; }
+.msg.goal .op-steps:empty { display: none; }
+.msg.goal.cancelled .op-card { opacity: .55; }
+.msg.agent.nucleo .via::after { content: " · núcleo"; }
+.msg.incoming .text { color: var(--ink); }
+.reply-box { display: flex; gap: 8px; margin-top: 10px; }
+.reply-box input {
+  flex: 1; min-width: 0; padding: 9px 12px; border-radius: var(--r-sm);
+  background: rgba(0,0,0,.3); border: 1px solid var(--line-2); color: var(--ink); font-size: 14px;
+}
+.reply-box input:focus { border-color: var(--ink-2); }
+.reply-box button { padding: 0 14px; border-radius: var(--r-sm); background: var(--ink); color: #000; font-size: 12px; }
+.reply-mine { margin-top: 8px; font-size: 13.5px; color: var(--ink-2); padding-left: 10px; border-left: 2px solid var(--line-2); }
+.reply-note { font-size: 10.5px; color: var(--ink-3); margin-top: 6px; }
+.reply-note:empty { display: none; }

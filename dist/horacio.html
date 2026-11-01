@@ -443,6 +443,33 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .ext-chip { font-size: 10px; padding: 2px 7px; border-radius: 7px; border: 1px solid var(--line-2); color: var(--ink-2); letter-spacing: .02em; }
 .ext-chip:hover { color: var(--ink); background: var(--glass-hi); }
 
+.perm-pill {
+  max-width: 760px; margin: 0 auto 8px; padding: 7px 12px; border-radius: 12px;
+  font-size: 11.5px; color: var(--ink); letter-spacing: .02em;
+  border: 1px dashed var(--line-2); background: rgba(255,255,255,.04);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  animation: rise .3s var(--ease) both;
+}
+
+/* ---------- Ordens em português e conversa entre núcleos ---------- */
+.goal-text { font-size: 14px; color: var(--ink-2); margin: -2px 0 10px; }
+.goal-out:empty { display: none; }
+.goal-out { margin-top: 10px; }
+.msg.goal .op-steps:empty { display: none; }
+.msg.goal.cancelled .op-card { opacity: .55; }
+.msg.agent.nucleo .via::after { content: " · núcleo"; }
+.msg.incoming .text { color: var(--ink); }
+.reply-box { display: flex; gap: 8px; margin-top: 10px; }
+.reply-box input {
+  flex: 1; min-width: 0; padding: 9px 12px; border-radius: var(--r-sm);
+  background: rgba(0,0,0,.3); border: 1px solid var(--line-2); color: var(--ink); font-size: 14px;
+}
+.reply-box input:focus { border-color: var(--ink-2); }
+.reply-box button { padding: 0 14px; border-radius: var(--r-sm); background: var(--ink); color: #000; font-size: 12px; }
+.reply-mine { margin-top: 8px; font-size: 13.5px; color: var(--ink-2); padding-left: 10px; border-left: 2px solid var(--line-2); }
+.reply-note { font-size: 10.5px; color: var(--ink-3); margin-top: 6px; }
+.reply-note:empty { display: none; }
+
 </style>
 </head>
 <body>
@@ -700,7 +727,7 @@ $("#scrim").addEventListener("click", () => toggleMenu(false));
       id: opts.id, name: opts.name || opts.id, role: opts.role || '', kind: opts.kind || 'ia'
     };
     const actions = opts.actions || {};
-    const listeners = { status: new Set(), event: new Set(), message: new Set() };
+    const listeners = { status: new Set(), event: new Set(), message: new Set(), permission: new Set() };
     const pending = new Map(); // id -> { resolve, reject, timer, onProgress }
     const seen = new Set();
 
@@ -717,7 +744,7 @@ $("#scrim").addEventListener("click", () => toggleMenu(false));
     }, extra || {});
 
     const hello = () => envelope('hello', CORE, null, {
-      name: me.name, role: me.role, kind: me.kind,
+      name: me.name, role: me.role, kind: me.kind, sdk: 2,
       actions: Object.keys(actions).map(name => ({ name, desc: actions[name].desc || '' }))
     });
 
@@ -758,6 +785,17 @@ $("#scrim").addEventListener("click", () => toggleMenu(false));
       emit('message', env);
 
       if (env.type === 'response') return settle(env.replyTo, env.ok !== false, env.payload, env.error);
+      if (env.type === 'progress' && env.from === CORE && env.payload && env.payload.asafe === 'permission') {
+        // O Asafe segurou o pedido para pedir permissão: o prazo fica pausado até a decisão.
+        const p = pending.get(env.replyTo);
+        if (p) {
+          clearTimeout(p.timer);
+          const wait = env.payload.state === 'pending' ? (env.payload.timeoutMs || 60000) + 5000 : p.timeout;
+          p.timer = setTimeout(() => settle(env.replyTo, false, null, p.timeoutError()), wait);
+        }
+        emit('permission', { id: env.replyTo, state: env.payload.state, action: env.action });
+        return;
+      }
       if (env.type === 'progress') {
         const p = pending.get(env.replyTo);
         if (p && p.onProgress) try { p.onProgress(env.payload); } catch (e) { console.error(e); }
@@ -847,13 +885,14 @@ $("#scrim").addEventListener("click", () => toggleMenu(false));
       request(to, action, payload = {}, { timeout = 90000, onProgress } = {}) {
         return new Promise((resolve, reject) => {
           const env = envelope('request', to, action, payload);
-          const timer = setTimeout(() => settle(env.id, false, null, {
+          const timeoutError = () => ({
             code: 'timeout',
             message: mode === 'local'
               ? 'Sem resposta. Confira se o Asafe e o agente de destino estão abertos.'
               : 'Sem resposta do agente de destino.'
-          }), timeout);
-          pending.set(env.id, { resolve, reject, timer, onProgress });
+          });
+          const timer = setTimeout(() => settle(env.id, false, null, timeoutError()), timeout);
+          pending.set(env.id, { resolve, reject, timer, onProgress, timeout, timeoutError });
           const go = () => post(env).catch(e => settle(env.id, false, null, { code: 'offline', message: e.message }));
           if (mode) go(); else { const off = api.on('status', () => { if (mode) { off(); go(); } }); }
         });
@@ -864,6 +903,7 @@ $("#scrim").addEventListener("click", () => toggleMenu(false));
       roster() { return api.request(CORE, 'roster', {}, { timeout: 8000 }).then(r => r.agents); },
       /** Registra mais uma ação depois de conectado. */
       handle(name, handler, desc = '') { actions[name] = { handler, desc }; if (mode) post(hello()); },
+      /** kind: 'status' | 'event' | 'message' | 'permission' ({ id, state: 'pending'|'granted', action }) */
       on(kind, fn) { listeners[kind].add(fn); return () => listeners[kind].delete(fn); },
       close() {
         if (closed) return;
@@ -1059,7 +1099,7 @@ $("#scrim").addEventListener("click", () => toggleMenu(false));
     return true;
   }
 
-  window.horacioAsafe = { link, handle, parse, nameOf, knownIds, norm, md, horacioSays, showAgent };
+  window.horacioAsafe = { link, handle, parse, nameOf, knownIds, norm, md, horacioSays, showAgent, ask };
 })();
 
 </script>
@@ -1624,6 +1664,289 @@ $("#scrim").addEventListener("click", () => toggleMenu(false));
 
 </script>
   <script>
+// HORÁCIO ⇄ ASAFE — ordens em português, manual e conversa entre núcleos.
+// - agent.do  { goal, confirm? }: o agente executa o objetivo na própria tela
+// - agent.manual {}: telas, ordens aceitas e dicas
+// - agent.say { text }: mensagem ao núcleo do agente (painel Núcleo do Miquéias)
+// - chat.say  { text, from } (ação do Horácio): outro agente fala com o Horácio
+//   e o Sr. Nathanael responde. O Horácio ainda não tem núcleo de IA, então
+//   nenhuma resposta é inventada.
+// Especificação: docs/CONTROLE.md (seção "Ordens em português e conversa")
+
+(function () {
+  const H = window.horacioAsafe;
+  if (!H) return;
+  const { link, nameOf, norm, md, showAgent } = H;
+
+  /* ---------- quem sabe o quê (pelo roster) ---------- */
+  let roster = [];
+  const acts = (id) => ((roster.find((a) => a.id === id) || {}).actions || []).map((a) => a.name || a);
+  const has = (id, action) => acts(id).includes(action);
+  async function refresh() {
+    if (link.status !== "online") return;
+    try { roster = await link.roster(); } catch (e) { /* Asafe fechado */ }
+  }
+  link.on("status", refresh);
+  setInterval(refresh, 10000);
+
+  /* ---------- entender o pedido ---------- */
+  // Verbos de ordem que o próprio agente executa (agent.do). Os verbos de
+  // controle preciso (clique, digite, role, espere, leia a tela, envie) continuam
+  // indo para ui.*; pesquisa e trade continuam nas habilidades dedicadas.
+  const GOAL_VERBS = /^(abra|abre|abrir|volte|volta|voltar|feche|fecha|fechar|compre|compra|comprar|venda|vende|vender|lembre|lembra|lembrar|esqueca|esquece|esquecer|avise|avisa|mostre|mostra|liste|lista|entre|entra|troque|troca|mude|muda|o que voce sabe|quem esta conectado|o que voce lembra)\b/;
+
+  function addressed(text) {
+    const raw = text.trim();
+    const t = norm(raw);
+    const m = t.match(/^(?:horacio[\s,]+)?(?:por favor[\s,]+)?(?:@([a-z0-9-]+)[\s,:]+|([a-z0-9-]+)\s*[,:]\s*)/);
+    if (!m) return null;
+    const to = m[1] || m[2];
+    if (!H.knownIds().has(to)) return null;
+    const rest = raw.slice(m[0].length).replace(/^por favor[\s,]+/i, "").trim();
+    return rest ? { to, rest, nrest: norm(rest) } : null;
+  }
+
+  function parse(text) {
+    const t = norm(text.trim());
+    let m;
+    if ((m = t.match(/^\/manual(?:\s+([a-z0-9-]+))?$/))) return { kind: "manual", to: m[1] || "miqueias" };
+    if ((m = text.trim().match(/^\/fazer\s+([\s\S]+)$/i))) return { kind: "do", to: "miqueias", goal: m[1].trim() };
+    // "diga/avise/conte ao Miquéias (que) …" → núcleo (agent.say)
+    m = t.match(/^(?:horacio[\s,]+)?(?:diga|diz|avise|avisa|conte|conta|fale|fala)\s+(?:ao|a|para o|pro|pra)\s+([a-z0-9-]+)\s+(?:que\s+)?([\s\S]+)$/);
+    if (m && H.knownIds().has(m[1])) return { kind: "say", to: m[1], text: text.trim().slice(text.trim().length - m[2].length).trim() };
+    const a = addressed(text);
+    if (!a) return null;
+    if ((m = a.rest.match(/^(?:faça|faca|execute|executa)\s*:\s*([\s\S]+)$/i))) return { kind: "do", to: a.to, goal: m[1].trim() };
+    if (/^n[uú]cleo\s*:/i.test(a.rest)) return { kind: "say", to: a.to, text: a.rest.replace(/^n[uú]cleo\s*:\s*/i, "") };
+    // pesquisa e trade têm cartões próprios; controle preciso fica com ui.*
+    if (H.habilidades && H.habilidades.parse(text)) return null;
+    const ctl = H.controle && H.controle.parse(text);
+    if (ctl && !/^(abra|abre|abrir)\b/.test(a.nrest)) return null; // "leia a tela", "clique em…", "digite…"
+    if (GOAL_VERBS.test(a.nrest)) return { kind: "do", to: a.to, goal: a.rest, fallback: true };
+    return null;
+  }
+
+  /* ---------- cartão de ordem ---------- */
+  const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+
+  function goalCard(to, goal) {
+    const el = document.createElement("div");
+    el.className = "msg ai op goal";
+    el.innerHTML = `
+      <div class="avatar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjY3MiAyMTAgNjYwIDY2MCIgZmlsbD0iI2ZmZiI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNjg2IDM2MEw4OTAgMjQyVjQ2M0w5NzMgNTU3TDg5MCA2MzhWODQyTDY4NiA3MjJaIE03NTcgNDAxTDgyMiAzNjNWNDYwTDg5MCA1NDVMODIyIDU5NVY3MjJMNzU3IDY4NFogTTExMTYgMjM3TDEzMTggMzU1VjcyMkwxMTE0IDg0MFY2NTRMMTAzMCA1NTdMMTExNiA0NzVaIE0xMTgxIDM1N0wxMjQ3IDM5N1Y2ODNMMTE4MSA3MjFWNjU0TDExMTQgNTcwTDExODEgNTIwWiBNOTI5IDQ0OEgxMDc2TDEwMDIgNTU3TDEwNzYgNjY3SDkyOUwxMDAyIDU1N1oiLz48L3N2Zz4K" alt="" /></div>
+      <div class="body">
+        <div class="name">HORÁCIO<span class="via mono">ordem via Asafe</span><span class="t"></span></div>
+        <div class="op-card">
+          <div class="op-head"><span class="op-title"></span><span class="op-state mono">enviando</span></div>
+          <p class="goal-text"></p>
+          <ol class="op-steps"></ol>
+          <div class="goal-out"></div>
+        </div>
+      </div>`;
+    el.querySelector(".t").textContent = time();
+    el.querySelector(".op-title").textContent = `Horácio → Asafe → ${nameOf(to)}`;
+    el.querySelector(".goal-text").textContent = `“${goal}”`;
+    thread.append(el);
+    scrollDown();
+    const state = el.querySelector(".op-state");
+    const steps = el.querySelector(".op-steps");
+    const out = el.querySelector(".goal-out");
+    return {
+      el,
+      state: (s) => { state.textContent = s; },
+      steps(list) {
+        steps.replaceChildren();
+        (list || []).forEach((s) => {
+          const li = h("li", "op-step " + (s.ok ? "ok" : "err"));
+          li.append(h("span", "ico mono", s.ok ? "✓" : "✕"), h("span", "lbl", (s.step || "").replace(/_/g, " ")), h("span", "det mono", s.detail || ""));
+          steps.append(li);
+        });
+      },
+      result(text) { const d = h("div", "text md"); d.innerHTML = md(String(text)); out.replaceChildren(d); scrollDown(); },
+      confirm(message) {
+        return new Promise((resolve) => {
+          const box = h("div", "op-confirm");
+          box.innerHTML = `<p></p><div><button type="button" class="yes">Confirmar</button><button type="button" class="no">Cancelar</button></div>`;
+          box.querySelector("p").textContent = message;
+          out.replaceChildren(box);
+          scrollDown();
+          box.querySelector(".yes").onclick = () => { box.remove(); resolve(true); };
+          box.querySelector(".no").onclick = () => { box.remove(); resolve(false); };
+        });
+      },
+      fail(msg) { el.classList.add("failed"); state.textContent = "falhou"; out.replaceChildren(h("p", "sk-err", msg)); scrollDown(); },
+      remove() { el.remove(); },
+    };
+  }
+
+  async function doGoal(to, goal, fallback) {
+    if (!roster.length) await refresh();
+    if (!has(to, "agent.do")) {
+      // agente sem agent.do: vira pergunta comum
+      if (fallback) return H.ask(to, goal);
+      return H.horacioSays(`O ${nameOf(to)} não aceita ordens em português (agent.do). Tente "${nameOf(to)}, clique em …".`);
+    }
+    const c = goalCard(to, goal);
+    const send = (confirm) => link.request(to, "agent.do", confirm ? { goal, confirm: true } : { goal }, { timeout: 120000 });
+    try {
+      let r;
+      try {
+        c.state("executando");
+        r = await send(false);
+      } catch (e) {
+        if (e.code === "not_understood" && fallback) {
+          // não era uma ordem: pergunta ao agente
+          c.remove();
+          return H.ask(to, goal);
+        }
+        if (e.code !== "needs_confirmation") throw e;
+        c.state("aguardando sua confirmação");
+        const ok = await c.confirm(e.message || "Esta ação é protegida. Confirma?");
+        if (!ok) { c.state("cancelado"); c.el.classList.add("cancelled"); return; }
+        c.state("executando");
+        r = await send(true);
+      }
+      c.state(r && r.done ? "concluído" : "terminado");
+      c.steps(r && r.steps);
+      if (r && r.result) c.result(r.result);
+    } catch (e) {
+      c.fail(e.code === "not_understood" ? e.message : `Não consegui: ${e.message}`);
+    }
+  }
+
+  /* ---------- manual ---------- */
+  async function manual(to) {
+    if (!roster.length) await refresh();
+    const view = showAgent(to, `Manual · Horácio → Asafe → ${nameOf(to)}`);
+    if (!has(to, "agent.manual")) return view.fail(`O ${nameOf(to)} não tem manual (agent.manual).`);
+    try {
+      const m = await link.request(to, "agent.manual", {}, { timeout: 20000 });
+      const lines = [];
+      if (m.intents && m.intents.length) {
+        lines.push(`### O que o ${m.app || nameOf(to)} sabe fazer`);
+        m.intents.forEach((i) => lines.push(`- **${i.desc}**${i.protected ? " *(pede confirmação)*" : ""}: \`${nameOf(to)}, ${i.example}\``));
+      }
+      if (m.screens && m.screens.length) {
+        lines.push(`\n### Telas`);
+        m.screens.forEach((s) => lines.push(`- **${s.id}**: ${s.desc}`));
+      }
+      if (m.tips && m.tips.length) {
+        lines.push(`\n### Dicas`);
+        m.tips.forEach((t) => lines.push(`- ${t}`));
+      }
+      view.set(lines.join("\n") || "(manual vazio)");
+    } catch (e) {
+      view.fail(`Não consegui ler o manual: ${e.message}`);
+    }
+  }
+
+  /* ---------- conversa com o núcleo do agente ---------- */
+  async function say(to, text) {
+    if (!roster.length) await refresh();
+    const view = showAgent(to, `Núcleo · Horácio → Asafe → ${nameOf(to)}`);
+    view.el.classList.add("nucleo");
+    if (!has(to, "agent.say")) {
+      view.el.remove();
+      return H.ask(to, text);
+    }
+    try {
+      const r = await link.request(to, "agent.say", { text }, { timeout: 120000 });
+      view.set(r && r.reply ? String(r.reply) : "(sem resposta)");
+    } catch (e) {
+      view.fail(`Não consegui falar com o núcleo do ${nameOf(to)}: ${e.message}`);
+    }
+  }
+
+  /* ---------- chat.say: outro agente fala com o Horácio ---------- */
+  const REPLY_WINDOW = 80000; // o Miquéias espera 90 s; respondemos antes disso
+
+  function incoming(from, text) {
+    const el = document.createElement("div");
+    el.className = "msg ai agent incoming";
+    el.innerHTML = `
+      <div class="avatar agent-avatar mono"></div>
+      <div class="body">
+        <div class="name"><b></b><span class="via mono">via Asafe</span><span class="t"></span></div>
+        <div class="route mono"></div>
+        <div class="text md"></div>
+        <form class="reply-box" autocomplete="off">
+          <input type="text" placeholder="Responder ao agente…" />
+          <button type="submit" class="mono">Responder</button>
+        </form>
+        <p class="reply-note mono"></p>
+      </div>`;
+    el.querySelector(".agent-avatar").textContent = nameOf(from).slice(0, 2).toUpperCase();
+    el.querySelector(".name b").textContent = nameOf(from).toUpperCase();
+    el.querySelector(".t").textContent = time();
+    el.querySelector(".route").textContent = `${nameOf(from)} → Asafe → Horácio`;
+    el.querySelector(".text").innerHTML = md(text);
+    thread.append(el);
+    // a conversa pode estar na tela inicial
+    welcome.hidden = true;
+    thread.hidden = false;
+    scrollDown();
+    return el;
+  }
+
+  link.handle("chat.say", (payload, ctx) => {
+    const from = ctx.from;
+    const text = String((payload && payload.text) || "").trim();
+    if (!text) throw Object.assign(new Error("Mensagem vazia."), { code: "bad_request" });
+    const el = incoming(from, text);
+    const form = el.querySelector(".reply-box");
+    const input = form.querySelector("input");
+    const note = el.querySelector(".reply-note");
+    note.textContent = "O Horácio ainda não tem núcleo de IA: a resposta é do senhor.";
+    return new Promise((resolve) => {
+      let open = true;
+      const timer = setTimeout(() => {
+        open = false;
+        note.textContent = "Sem resposta a tempo. Se responder agora, vai para o núcleo do agente.";
+        resolve({ reply: null, note: "O Sr. Nathanael ainda não respondeu pelo Horácio." });
+      }, REPLY_WINDOW);
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const reply = input.value.trim();
+        if (!reply) return;
+        input.value = "";
+        const mine = document.createElement("p");
+        mine.className = "reply-mine";
+        mine.textContent = `Sr. Nathanael: ${reply}`;
+        el.querySelector(".body").insertBefore(mine, form);
+        if (open) {
+          open = false;
+          clearTimeout(timer);
+          note.textContent = "Resposta enviada.";
+          form.remove();
+          resolve({ reply, from: "Sr. Nathanael (pelo Horácio)" });
+        } else {
+          note.textContent = "Enviando ao núcleo do agente…";
+          form.remove();
+          link.request(from, "agent.say", { text: reply }, { timeout: 120000 })
+            .then((r) => { note.textContent = "Enviado ao núcleo."; if (r && r.reply) { const v = showAgent(from, `Núcleo · resposta`); v.set(String(r.reply)); } })
+            .catch((err) => { note.textContent = `Não consegui enviar: ${err.message}`; });
+        }
+      });
+      setTimeout(() => input.focus(), 50);
+    });
+  }, "Conversa com o Horácio: a mensagem aparece para o Sr. Nathanael, que responde. payload: { text, from }");
+
+  /* ---------- liga no fluxo de mensagens ---------- */
+  const prev = H.handle;
+  H.handle = function (text) {
+    const cmd = parse(text);
+    if (!cmd) return prev(text);
+    addUser(text);
+    if (cmd.kind === "do") doGoal(cmd.to, cmd.goal, cmd.fallback);
+    else if (cmd.kind === "manual") manual(cmd.to);
+    else if (cmd.kind === "say") say(cmd.to, cmd.text);
+    return true;
+  };
+  H.agentes = { parse, doGoal, manual, say };
+})();
+
+</script>
+  <script>
 // HORÁCIO ⇄ ASAFE — permissões.
 // Antes de usar o núcleo de outra IA, o Horácio pede permissão ao Asafe
 // (permission.request). Sem permissão, nada sai do núcleo do Horácio.
@@ -1649,7 +1972,8 @@ $("#scrim").addEventListener("click", () => toggleMenu(false));
   const SCOPE_LABEL = { conversa: "conversa", pesquisa: "pesquisa", "trade.leitura": "trade (leitura)", "trade.piloto": "piloto automático", controle: "controle de tela", configuracao: "configurações", outros: "outras funções" };
 
   function scopeOf(action) {
-    if (/^chat\./.test(action)) return "conversa";
+    if (/^chat\./.test(action) || action === "agent.say" || action === "agent.manual") return "conversa";
+    if (action === "agent.do") return "controle"; // o Miquéias executa ações na própria tela
     if (action === "research.run") return "pesquisa";
     if (action === "trade.status" || action === "trade.study") return "trade.leitura";
     if (action === "trade.autopilot") return "trade.piloto";
@@ -1774,6 +2098,36 @@ $("#scrim").addEventListener("click", () => toggleMenu(false));
     }
     H.horacioSays(`O Asafe retirou a permissão de ${scope ? SCOPES[scope] || scope : "usar o núcleo do"} ${nameOf(to)}.`);
   });
+
+  /* ---------- aviso "aguardando sua permissão no Asafe" ---------- */
+  // O Asafe pode segurar um pedido até o Sr. Nathanael aceitar ou recusar na aba Permissões.
+  const ACTION_LABEL = {
+    "chat.ask": "conversa", "chat.new": "nova conversa", "research.run": "pesquisa", "trade.status": "situação do trade",
+    "trade.study": "estudo de trade", "trade.autopilot": "piloto automático", "agent.do": "ordem", "agent.say": "mensagem ao núcleo",
+    "agent.manual": "manual", "permission.request": "permissão",
+  };
+  const waiting = new Map(); // id do pedido -> ação
+  const pill = document.createElement("div");
+  pill.className = "perm-pill mono";
+  pill.hidden = true;
+  pill.setAttribute("role", "status");
+  const composerEl = document.querySelector("#composer");
+  composerEl.parentNode.insertBefore(pill, composerEl);
+  function paintPill() {
+    if (!waiting.size) { pill.hidden = true; return; }
+    const names = [...new Set([...waiting.values()].map((a) => ACTION_LABEL[a] || (/^ui\./.test(a) ? "controle de tela" : a)))];
+    pill.textContent = `◌ Aguardando sua permissão no Asafe · ${names.join(", ")}`;
+    pill.hidden = false;
+  }
+  if (link.on && typeof link.on === "function") {
+    try {
+      link.on("permission", ({ id, state, action }) => {
+        if (state === "pending") waiting.set(id, action || "pedido"); else waiting.delete(id);
+        paintPill();
+      });
+    } catch (e) { /* SDK antigo, sem o aviso de permissão */ }
+    link.on("message", (env) => { if (env.type === "response" && waiting.delete(env.replyTo)) paintPill(); });
+  }
 
   /* ---------- chave "Operar o …" ---------- */
   async function setControl(to, on, silent) {

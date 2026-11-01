@@ -80,3 +80,22 @@ Além do controle de tela, o Horácio entende as ações `research.run`, `trade.
 | `Miquéias, desligue o piloto` · `/piloto off` | `trade.autopilot { on: false }` | confirmação de desligado (sem pedir confirmação) |
 
 Palavras reconhecidas no piloto: `cruzamento`/`médias`/`EMA` → `cruzamento`; `RSI` → `rsi`; `rompimento`/`canal`/`Donchian` → `rompimento`; `BTC`/`Bitcoin`, `ETH`/`Ethereum`, `SOL`/`Solana`; `ao vivo`/`live`/`tempo real` → `live`; `replay`/`histórico`/`simulado` → `replay`.
+
+---
+
+# Ordens em português e conversa entre núcleos
+
+Implementação: `asafe-agentes.js`. Ações do Miquéias a partir do commit 5c51d90 (`companynathanael/miqu-ias`).
+
+| O Sr. Nathanael escreve | Ação | Observação |
+| --- | --- | --- |
+| `Miquéias, abra o laboratório e depois ligue o piloto em ETH com RSI ao vivo` (verbos de ordem: abra, volte, feche, compre, venda, lembre, esqueça, avise, mostre, liste, troque, mude…) | `agent.do { goal }` | `needs_confirmation` → Confirmar/Cancelar → reenvia com `confirm: true`. `not_understood` → vira `chat.ask` |
+| `Miquéias, faça: …` · `/fazer …` | `agent.do { goal }` | sempre como ordem (sem cair para pergunta) |
+| `/manual miqueias` | `agent.manual {}` | mostra o que o agente sabe fazer, telas e dicas |
+| `diga ao Miquéias que …` · `Miquéias, núcleo: …` | `agent.say { text }` | aparece no painel Núcleo do Miquéias; a resposta volta ao Horácio |
+
+Continuam como antes: controle preciso (`clique`, `digite`, `role`, `espere`, `leia a tela`, `envie`) → `ui.*`; pesquisa e trade → habilidades dedicadas; perguntas → `chat.ask`.
+
+## `chat.say` (ação do Horácio)
+
+`chat.say { text, from }` → `{ reply, from }`. Outro agente fala com o Horácio. A mensagem aparece na conversa com o campo **Responder**. O Horácio ainda não tem núcleo de IA, então **quem responde é o Sr. Nathanael**: nenhuma resposta é inventada. Se ninguém responder em 80 s, volta `{ reply: null, note }`; uma resposta posterior é enviada ao núcleo do agente por `agent.say`.
