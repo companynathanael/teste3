@@ -75,15 +75,6 @@ form.addEventListener("submit", (e) => {
   send.disabled = true;
 });
 
-/* Cartões de sugestão */
-document.querySelectorAll(".card").forEach((c) =>
-  c.addEventListener("click", () => {
-    input.value = c.dataset.prompt;
-    input.dispatchEvent(new Event("input"));
-    input.focus();
-  })
-);
-
 /* Nova conversa */
 function reset() {
   thread.innerHTML = "";
