@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Horácio</title>
+  <meta name="theme-color" content="#050505" />
+  <link rel="icon" href="assets/mark.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Fundo: formas monocromáticas desfocadas que dão vida ao vidro fosco -->
+  <div class="backdrop" aria-hidden="true">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+    <div class="grid"></div>
+    <div class="grain"></div>
+  </div>
+
+  <div class="app">
+    <!-- ============ BARRA LATERAL ============ -->
+    <aside class="sidebar glass" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark"><img src="assets/mark.svg" alt="" /></div>
+        <div class="brand-text">
+          <span class="brand-name">HORÁCIO</span>
+          <span class="brand-sub mono">assistente pessoal · v0.1</span>
+        </div>
+        <button class="icon-btn only-mobile" id="closeSidebar" aria-label="Fechar menu">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+
+      <button class="new-chat" id="newChat">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Nova conversa</span>
+        <kbd class="mono">⌘K</kbd>
+      </button>
+
+      <label class="search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="text" placeholder="Buscar conversas" />
+      </label>
+
+      <nav class="history" aria-label="Histórico">
+        <p class="group-label mono">Hoje</p>
+        <a class="chat-item active" href="#"><span class="dot"></span>Planejamento da semana</a>
+        <a class="chat-item" href="#"><span class="dot"></span>Resumo dos e-mails</a>
+        <p class="group-label mono">Ontem</p>
+        <a class="chat-item" href="#"><span class="dot"></span>Ideias para o projeto</a>
+        <a class="chat-item" href="#"><span class="dot"></span>Lembretes de reunião</a>
+        <p class="group-label mono">Últimos 7 dias</p>
+        <a class="chat-item" href="#"><span class="dot"></span>Pesquisa de mercado</a>
+        <a class="chat-item" href="#"><span class="dot"></span>Rotina de treinos</a>
+        <a class="chat-item" href="#"><span class="dot"></span>Revisão de contrato</a>
+      </nav>
+
+      <!-- Sem perfil: apenas o estado do sistema -->
+      <div class="system-card">
+        <div class="system-row">
+          <span class="pulse"></span>
+          <span class="system-title">Sistema online</span>
+        </div>
+        <div class="system-meta mono">
+          <span>Identificado: Sr. Nathanael</span>
+          <span id="clock">--:--</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="scrim only-mobile" id="scrim"></div>
+
+    <!-- ============ ÁREA PRINCIPAL ============ -->
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn only-mobile" id="openSidebar" aria-label="Abrir menu">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+        </button>
+        <div class="topbar-title">
+          <span class="chip glass-chip mono"><span class="pulse small"></span>Horácio · Núcleo</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-btn glass-chip" aria-label="Modo voz" title="Modo voz">
+            <svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></svg>
+          </button>
+          <button class="icon-btn glass-chip" aria-label="Configurações" title="Configurações">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="stage" id="stage">
+        <!-- Tela inicial -->
+        <div class="welcome" id="welcome">
+          <div class="orb" aria-hidden="true">
+            <div class="orb-ring r1"></div>
+            <div class="orb-ring r2"></div>
+            <div class="orb-ring r3"></div>
+            <div class="orb-core"></div>
+          </div>
+
+          <p class="eyebrow mono" id="dateLine">—</p>
+          <h1 class="greeting">
+            <span id="greet">Olá</span>, <em>Sr. Nathanael.</em>
+          </h1>
+          <p class="lead">Em que posso ajudar hoje?</p>
+
+          <div class="cards">
+            <button class="card glass" data-prompt="Organize minha agenda de hoje.">
+              <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
+              <span class="card-title">Agenda</span>
+              <span class="card-sub">Organizar o dia</span>
+            </button>
+            <button class="card glass" data-prompt="Resuma meus e-mails não lidos.">
+              <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 8l9 6 9-6"/></svg></div>
+              <span class="card-title">E-mails</span>
+              <span class="card-sub">Resumo do inbox</span>
+            </button>
+            <button class="card glass" data-prompt="Me ajude a pesquisar um assunto.">
+              <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></div>
+              <span class="card-title">Pesquisa</span>
+              <span class="card-sub">Ir a fundo</span>
+            </button>
+            <button class="card glass" data-prompt="Crie um lembrete para mim.">
+              <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg></div>
+              <span class="card-title">Lembretes</span>
+              <span class="card-sub">Não esquecer nada</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Conversa -->
+        <div class="thread" id="thread" hidden></div>
+      </section>
+
+      <!-- Caixa de mensagem -->
+      <footer class="composer-wrap">
+        <form class="composer glass" id="composer" autocomplete="off">
+          <button type="button" class="icon-btn subtle" aria-label="Anexar">
+            <svg viewBox="0 0 24 24"><path d="M21 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9"/></svg>
+          </button>
+          <textarea id="input" rows="1" placeholder="Fale com o Horácio…"></textarea>
+          <button type="button" class="icon-btn subtle" aria-label="Falar">
+            <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          </button>
+          <button type="submit" class="send" id="send" aria-label="Enviar" disabled>
+            <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          </button>
+        </form>
+        <p class="footnote mono">Horácio · interface em construção — etapa 1</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
