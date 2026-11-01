@@ -64,3 +64,19 @@ O Sr. Nathanael escreve o nome do agente seguido de um verbo de controle. Vário
 Verbos reconhecidos: **clique/clica/aperte, abra/abre, digite/digita, envie/enviar, pressione/tecle, role/rola, espere/aguarde, leia/mostre a tela**. Perguntas comuns (`Miquéias, escreva um plano…`) continuam indo para `chat.ask`. Para a digitação usa-se **digite**, e não "escreva".
 
 Cada operação aparece no Horácio como um cartão com os passos (pendente, em andamento, feito ou erro), o botão **Parar** e, quando preciso, **Confirmar/Cancelar**.
+
+---
+
+# Habilidades do Miquéias no Horácio
+
+Além do controle de tela, o Horácio entende as ações `research.run`, `trade.status`, `trade.study` e `trade.autopilot` do Miquéias (`companynathanael/miqu-ias`, commit 5785866). Implementação: `asafe-habilidades.js`.
+
+| O Sr. Nathanael escreve | Ação enviada pelo Asafe | O Horácio mostra |
+| --- | --- | --- |
+| `Miquéias, pesquise sobre …` · `@miqueias busque …` · `peça ao Miquéias que pesquise …` · `/pesquisa …` | `research.run { query }` (timeout 180 s, com `progress`) | resposta formatada + fontes clicáveis (só `http`/`https`) |
+| `Miquéias, como está o trade?` · `Miquéias, mostre o status do laboratório` · `/trade` | `trade.status {}` | patrimônio, retorno, caixa, operações, posição, piloto, último estudo e diário |
+| `Miquéias, faça um estudo de trade` · `Miquéias, teste as estratégias` · `/estudo` | `trade.study {}` (timeout 120 s) | ranking com barras e aprendizados |
+| `Miquéias, ligue o piloto automático [em BTC/ETH/SOL] [com cruzamento/RSI/rompimento] [ao vivo/replay]` · `/piloto on …` | `trade.autopilot { on: true, strategy?, symbol?, mode? }` | **pede Confirmar/Cancelar antes de enviar**, depois mostra a configuração |
+| `Miquéias, desligue o piloto` · `/piloto off` | `trade.autopilot { on: false }` | confirmação de desligado (sem pedir confirmação) |
+
+Palavras reconhecidas no piloto: `cruzamento`/`médias`/`EMA` → `cruzamento`; `RSI` → `rsi`; `rompimento`/`canal`/`Donchian` → `rompimento`; `BTC`/`Bitcoin`, `ETH`/`Ethereum`, `SOL`/`Solana`; `ao vivo`/`live`/`tempo real` → `live`; `replay`/`histórico`/`simulado` → `replay`.

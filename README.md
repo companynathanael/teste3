@@ -33,5 +33,8 @@ Especificação: [`docs/CONTROLE.md`](docs/CONTROLE.md).
 
 Exemplos: `Miquéias, leia a tela` · `Miquéias, clique em Nova conversa; digite "Olá" e depois envie; espere a resposta`
 
+## Etapa 2.2 — Habilidades do Miquéias
+`asafe-habilidades.js`: pesquisa na web com fontes e Laboratório de Trade (situação, estudo e piloto automático, com dinheiro fictício). O piloto só liga depois de **Confirmar**. Comandos em [`docs/CONTROLE.md`](docs/CONTROLE.md#habilidades-do-miquéias-no-horácio).
+
 ## Arquivo único
 `python3 tools/build-single.py` gera `dist/horacio.html` com tudo embutido, para abrir com dois cliques no Chrome.
