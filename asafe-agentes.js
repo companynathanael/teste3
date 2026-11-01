@@ -222,7 +222,7 @@
     return el;
   }
 
-  link.handle("chat.say", (payload, ctx) => {
+  const chatSayManual = (payload, ctx) => {
     const from = ctx.from;
     const text = String((payload && payload.text) || "").trim();
     if (!text) throw Object.assign(new Error("Mensagem vazia."), { code: "bad_request" });
@@ -263,7 +263,9 @@
       });
       setTimeout(() => input.focus(), 50);
     });
-  }, "Conversa com o Horácio: a mensagem aparece para o Sr. Nathanael, que responde. payload: { text, from }");
+  };
+  const CHAT_SAY_DESC = "Conversa com o Horácio: a mensagem aparece na conversa dele e volta uma resposta. payload: { text, from }";
+  link.handle("chat.say", chatSayManual, CHAT_SAY_DESC);
 
   /* ---------- liga no fluxo de mensagens ---------- */
   const prev = H.handle;
@@ -276,5 +278,5 @@
     else if (cmd.kind === "say") say(cmd.to, cmd.text);
     return true;
   };
-  H.agentes = { parse, doGoal, manual, say };
+  H.agentes = { parse, doGoal, manual, say, chatSayManual, CHAT_SAY_DESC, incoming };
 })();

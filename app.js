@@ -24,7 +24,7 @@ setInterval(updateTime, 15000);
 input.addEventListener("input", () => {
   input.style.height = "auto";
   input.style.height = input.scrollHeight + "px";
-  send.disabled = !input.value.trim();
+  send.disabled = !input.value.trim() && !(window.HoV && window.HoV.ocupado);
 });
 input.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
@@ -69,12 +69,12 @@ form.addEventListener("submit", (e) => {
   welcome.hidden = true;
   thread.hidden = false;
   if (!(window.horacioAsafe && window.horacioAsafe.handle(text))) {
-    addUser(text);
-    addAi();
+    if (window.HoV) window.HoV.enviar(text); // núcleo de IA (HoV 1.0)
+    else { addUser(text); addAi(); }
   }
   input.value = "";
   input.style.height = "auto";
-  send.disabled = true;
+  send.disabled = !(window.HoV && window.HoV.ocupado); // enquanto o núcleo responde, o botão vira "parar"
 });
 
 /* Nova conversa */

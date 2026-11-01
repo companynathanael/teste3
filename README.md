@@ -42,5 +42,8 @@ Exemplos: `Miquéias, leia a tela` · `Miquéias, clique em Nova conversa; digit
 ## Etapa 2.4 — Ordens em português e conversa entre núcleos
 `asafe-agentes.js`: ordens em português executadas pelo próprio Miquéias (`agent.do`), `/manual miqueias`, `diga ao Miquéias que …` (núcleo) e a ação `chat.say`, para o Miquéias falar com o Horácio e o Sr. Nathanael responder. `asafe-link.js` atualizado para o SDK 2 do Asafe (espera a permissão sem estourar o prazo).
 
+## HoV 1.0 — núcleo de IA
+O Horácio pensa com o **Claude** (SDK oficial em `vendor/anthropic-sdk.js`): consciência de contexto, memória, conversas salvas, pesquisa na web, planilhas `.xlsx`, documentos, estudos independentes, imagens SVG, vídeos WebM, cálculos, tarefas, Miquéias pelo Asafe e comando de voz com voz masculina. Ligue em ⚙ Configurações com a sua chave da API. Detalhes: [`docs/HOV.md`](docs/HOV.md).
+
 ## Arquivo único
 `python3 tools/build-single.py` gera `dist/horacio.html` com tudo embutido, para abrir com dois cliques no Chrome.
