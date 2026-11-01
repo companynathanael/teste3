@@ -185,13 +185,17 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .orb-ring.r2 { inset: 14px; animation: spin 9s linear infinite reverse; border-right-color: rgba(255,255,255,.55); }
 .orb-ring.r3 { inset: 28px; border-style: dashed; opacity: .5; animation: spin 30s linear infinite; }
 .orb-core {
-  position: absolute; inset: 42px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff, #8d8d8d 45%, #1a1a1a 80%);
-  box-shadow: 0 0 60px rgba(255,255,255,.25), inset 0 0 18px rgba(0,0,0,.6);
+  position: absolute; inset: 34px; border-radius: 22px;
+  display: grid; place-items: center;
+  background: linear-gradient(160deg, rgba(255,255,255,.12), rgba(255,255,255,.03));
+  border: 1px solid var(--line-2);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  box-shadow: 0 0 60px rgba(255,255,255,.12), inset 0 1px 0 rgba(255,255,255,.1);
   animation: breathe 4s ease-in-out infinite;
 }
+.orb-core img { width: 70%; height: 70%; filter: drop-shadow(0 0 10px rgba(255,255,255,.45)); }
 @keyframes spin { to { transform: rotate(360deg); } }
-@keyframes breathe { 50% { transform: scale(1.08); box-shadow: 0 0 90px rgba(255,255,255,.35), inset 0 0 18px rgba(0,0,0,.6); } }
+@keyframes breathe { 50% { transform: scale(1.06); box-shadow: 0 0 90px rgba(255,255,255,.22), inset 0 1px 0 rgba(255,255,255,.1); } }
 
 .eyebrow { font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 14px; }
 .greeting {
@@ -277,7 +281,7 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
   .scrim { position: fixed; inset: 0; z-index: 15; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity .3s; display: block; }
   body.menu-open .scrim { opacity: 1; pointer-events: auto; }
   .orb { width: 104px; height: 104px; margin-bottom: 22px; }
-  .orb-ring.r2 { inset: 11px; } .orb-ring.r3 { inset: 22px; } .orb-core { inset: 33px; }
+  .orb-ring.r2 { inset: 11px; } .orb-ring.r3 { inset: 22px; } .orb-core { inset: 27px; border-radius: 18px; }
   .cards { margin-top: 28px; gap: 10px; }
   .msg.user .bubble { max-width: 88%; }
 }
