@@ -36,5 +36,8 @@ Exemplos: `Miquéias, leia a tela` · `Miquéias, clique em Nova conversa; digit
 ## Etapa 2.2 — Habilidades do Miquéias
 `asafe-habilidades.js`: pesquisa na web com fontes e Laboratório de Trade (situação, estudo e piloto automático, com dinheiro fictício). O piloto só liga depois de **Confirmar**. Comandos em [`docs/CONTROLE.md`](docs/CONTROLE.md#habilidades-do-miquéias-no-horácio).
 
+## Etapa 2.3 — Permissões do Asafe
+`asafe-permissoes.js`: antes de usar o núcleo de outra IA, o Horácio pede permissão ao Asafe (`permission.request`), por agente e escopo (conversa, pesquisa, trade, piloto, controle de tela…). Sem permissão, nada é executado. Na barra lateral, **Núcleos externos** mostra as permissões ativas e a chave **Operar o Miquéias**. Comandos: `pare de operar no Miquéias`, `volte a operar no Miquéias`, `/parar`, `/permissoes`, `/soltar miqueias`. Especificação: [`docs/PERMISSOES.md`](docs/PERMISSOES.md).
+
 ## Arquivo único
 `python3 tools/build-single.py` gera `dist/horacio.html` com tudo embutido, para abrir com dois cliques no Chrome.

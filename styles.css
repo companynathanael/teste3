@@ -387,3 +387,45 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
   .sk-rank-row .bar { display: none; }
   .sk-rank-row .nm { white-space: normal; }
 }
+
+/* ---------- Permissões do Asafe ---------- */
+.msg.perm { gap: 12px; }
+.msg.perm .avatar { opacity: .55; }
+.perm-line {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: var(--r-sm);
+  border: 1px dashed var(--line-2); background: rgba(255,255,255,.025);
+  font-size: 13.5px; color: var(--ink-2);
+}
+.perm-ico { width: 14px; text-align: center; color: var(--ink-3); }
+.msg.perm:not(.ok):not(.no) .perm-ico { display: inline-block; animation: spin 1.2s linear infinite; }
+.perm-txt { flex: 1; min-width: 0; }
+.perm-state { font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-3); }
+.msg.perm.ok .perm-line { border-style: solid; border-color: var(--line); }
+.msg.perm.ok .perm-ico, .msg.perm.ok .perm-state { color: var(--ink); }
+.msg.perm.no .perm-line { border-style: solid; border-color: rgba(255,255,255,.24); color: var(--ink); }
+.msg.perm.no .perm-ico, .msg.perm.no .perm-state { color: var(--ink); }
+.perm-why { font-size: 10.5px; color: var(--ink-3); margin: 5px 0 0 2px; }
+.perm-why:empty { display: none; }
+.msg.perm.no .perm-why { font-family: var(--f-body); font-size: 12.5px; color: var(--ink-2); }
+
+.ext-card { display: flex; flex-direction: column; gap: 6px; margin: 0 -2px; }
+.ext-card .group-label { padding: 0 10px 2px; }
+.ext-list { display: flex; flex-direction: column; gap: 6px; }
+.ext-empty { font-size: 11px; color: var(--ink-3); padding: 0 10px; }
+.ext-row { border-radius: var(--r-sm); padding: 9px 10px; background: rgba(0,0,0,.25); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 7px; }
+.ext-row.off { opacity: .5; }
+.ext-head { display: flex; align-items: center; gap: 9px; }
+.ext-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink); flex-shrink: 0; }
+.ext-row.off .ext-dot { background: var(--ink-3); }
+.ext-name { flex: 1; font-family: var(--f-display); font-weight: 500; font-size: 13.5px; }
+.ext-switch { display: inline-flex; align-items: center; gap: 7px; padding: 3px 3px 3px 8px; border-radius: 999px; border: 1px solid var(--line-2); background: rgba(255,255,255,.05); }
+.ext-switch .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-2); }
+.ext-switch i { position: relative; width: 26px; height: 15px; border-radius: 999px; background: rgba(255,255,255,.12); transition: background .2s; }
+.ext-switch i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: var(--ink-3); transition: transform .2s var(--ease), background .2s; }
+.ext-switch[aria-checked="true"] i { background: var(--ink); }
+.ext-switch[aria-checked="true"] i::after { transform: translateX(11px); background: #000; }
+.ext-switch[aria-checked="false"] .lbl { color: var(--ink); }
+.ext-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.ext-chip { font-size: 10px; padding: 2px 7px; border-radius: 7px; border: 1px solid var(--line-2); color: var(--ink-2); letter-spacing: .02em; }
+.ext-chip:hover { color: var(--ink); background: var(--glass-hi); }

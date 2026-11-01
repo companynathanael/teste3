@@ -189,7 +189,14 @@
     }
 
     let stopped = null;
-    const op = { to, stop: (why) => { if (!stopped) { stopped = why || "Parado."; state.textContent = "parado"; } } };
+    let activeRow = null;
+    const op = { to, stop: (why) => {
+      if (stopped) return;
+      stopped = why || "Parado.";
+      state.textContent = "parado";
+      if (activeRow) activeRow.set("stop", stopped); // o passo em andamento muda na hora
+      const btn = card.querySelector(".op-stop"); if (btn) btn.remove();
+    } };
     if (current) current.stop("Substituído por uma nova operação.");
     current = op;
     stopBtn.onclick = () => { op.stop("Parado pelo senhor."); link.request(to, "ui.control", { on: false, by: "horacio" }, { timeout: 5000 }).catch(() => {}); };
@@ -209,6 +216,7 @@
     let failed = false;
     for (let i = 0; i < steps.length; i++) {
       const row = rows[i];
+      activeRow = row;
       if (stopped) { rows.slice(i).forEach((r, k) => r.set("stop", k === 0 ? stopped : "")); break; }
       row.set("run", "");
       const { action, payload } = steps[i];
@@ -258,5 +266,10 @@
     run(cmd.to, cmd.steps);
     return true;
   };
-  H.controle = { parse, parseStep, splitSteps, run };
+  /** Para a operação em andamento (se houver) com o motivo dado. */
+  function stopAll(reason, to) {
+    if (current && (!to || current.to === to)) { current.stop(reason || "Parado."); return true; }
+    return false;
+  }
+  H.controle = { parse, parseStep, splitSteps, run, stopAll, get running() { return current ? current.to : null; } };
 })();
