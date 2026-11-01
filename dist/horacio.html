@@ -1,0 +1,1246 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Horácio</title>
+  <meta name="theme-color" content="#050505" />
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjY3MiAyMTAgNjYwIDY2MCIgZmlsbD0iI2ZmZiI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNjg2IDM2MEw4OTAgMjQyVjQ2M0w5NzMgNTU3TDg5MCA2MzhWODQyTDY4NiA3MjJaIE03NTcgNDAxTDgyMiAzNjNWNDYwTDg5MCA1NDVMODIyIDU5NVY3MjJMNzU3IDY4NFogTTExMTYgMjM3TDEzMTggMzU1VjcyMkwxMTE0IDg0MFY2NTRMMTAzMCA1NTdMMTExNiA0NzVaIE0xMTgxIDM1N0wxMjQ3IDM5N1Y2ODNMMTE4MSA3MjFWNjU0TDExMTQgNTcwTDExODEgNTIwWiBNOTI5IDQ0OEgxMDc2TDEwMDIgNTU3TDEwNzYgNjY3SDkyOUwxMDAyIDU1N1oiLz48L3N2Zz4K" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9IiMwYTBhMGEiLz4KICA8c3ZnIHg9IjkiIHk9IjkiIHdpZHRoPSI0NiIgaGVpZ2h0PSI0NiIgdmlld0JveD0iNjcyIDIxMCA2NjAgNjYwIiBmaWxsPSIjZmZmIj48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik02ODYgMzYwTDg5MCAyNDJWNDYzTDk3MyA1NTdMODkwIDYzOFY4NDJMNjg2IDcyMlogTTc1NyA0MDFMODIyIDM2M1Y0NjBMODkwIDU0NUw4MjIgNTk1VjcyMkw3NTcgNjg0WiBNMTExNiAyMzdMMTMxOCAzNTVWNzIyTDExMTQgODQwVjY1NEwxMDMwIDU1N0wxMTE2IDQ3NVogTTExODEgMzU3TDEyNDcgMzk3VjY4M0wxMTgxIDcyMVY2NTRMMTExNCA1NzBMMTE4MSA1MjBaIE05MjkgNDQ4SDEwNzZMMTAwMiA1NTdMMTA3NiA2NjdIOTI5TDEwMDIgNTU3WiIvPjwvc3ZnPgo8L3N2Zz4K" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+/* =========================================================
+   HORÁCIO — Etapa 1 · Interface
+   Monocromático · vidro fosco · cantos arredondados
+   ========================================================= */
+
+:root {
+  --bg: #050505;
+  --ink: #f5f5f5;
+  --ink-2: rgba(245, 245, 245, .66);
+  --ink-3: rgba(245, 245, 245, .40);
+  --line: rgba(255, 255, 255, .09);
+  --line-2: rgba(255, 255, 255, .16);
+  --glass: rgba(255, 255, 255, .045);
+  --glass-2: rgba(255, 255, 255, .08);
+  --glass-hi: rgba(255, 255, 255, .14);
+  --blur: blur(24px) saturate(140%);
+
+  --r-xs: 10px;
+  --r-sm: 14px;
+  --r-md: 20px;
+  --r-lg: 28px;
+
+  --f-display: "Space Grotesk", system-ui, sans-serif;
+  --f-body: "Inter", system-ui, sans-serif;
+  --f-serif: "Instrument Serif", Georgia, serif;
+  --f-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --sidebar: 288px;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+input, textarea { font: inherit; color: inherit; background: none; border: 0; outline: none; }
+a { color: inherit; text-decoration: none; }
+svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.mono { font-family: var(--f-mono); }
+[hidden] { display: none !important; }
+::selection { background: #fff; color: #000; }
+
+/* ---------- Fundo ---------- */
+.backdrop { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .55; }
+.b1 { width: 520px; height: 520px; background: radial-gradient(circle, #9a9a9a, transparent 70%); top: -160px; left: 18%; animation: drift 26s var(--ease) infinite alternate; }
+.b2 { width: 640px; height: 640px; background: radial-gradient(circle, #5a5a5a, transparent 70%); bottom: -260px; right: -120px; animation: drift 32s var(--ease) infinite alternate-reverse; }
+.b3 { width: 360px; height: 360px; background: radial-gradient(circle, #e6e6e6, transparent 70%); top: 45%; left: -120px; opacity: .22; animation: drift 22s var(--ease) infinite alternate; }
+@keyframes drift { to { transform: translate(80px, 60px) scale(1.12); } }
+.grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at 60% 40%, #000 20%, transparent 75%);
+}
+.grain {
+  position: absolute; inset: -50%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  opacity: .06; mix-blend-mode: overlay;
+}
+
+/* ---------- Vidro ---------- */
+.glass {
+  background: linear-gradient(160deg, var(--glass-2), var(--glass));
+  border: 1px solid var(--line);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 20px 50px -20px rgba(0,0,0,.6);
+}
+.glass-chip {
+  background: var(--glass);
+  border: 1px solid var(--line);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+}
+
+/* ---------- Layout ---------- */
+.app {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: var(--sidebar) 1fr;
+  gap: 14px; height: 100%; padding: 14px;
+}
+
+/* ---------- Barra lateral ---------- */
+.sidebar {
+  display: flex; flex-direction: column; gap: 14px;
+  border-radius: var(--r-lg); padding: 16px; min-height: 0;
+}
+.brand { display: flex; align-items: center; gap: 12px; padding: 4px 4px 6px; }
+.brand-mark { width: 40px; height: 40px; }
+.brand-mark img { width: 100%; height: 100%; display: block; }
+.brand-text { display: flex; flex-direction: column; flex: 1; }
+.brand-name { font-family: var(--f-display); font-weight: 700; letter-spacing: .22em; font-size: 15px; }
+.brand-sub { white-space: nowrap; font-size: 10.5px; color: var(--ink-3); letter-spacing: .04em; }
+
+.new-chat {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; border-radius: var(--r-sm);
+  background: var(--ink); color: #000; font-weight: 500;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.new-chat:hover { transform: translateY(-1px); box-shadow: 0 10px 30px -10px rgba(255,255,255,.35); }
+.new-chat span { flex: 1; text-align: left; }
+.new-chat kbd { font-size: 11px; padding: 2px 6px; border-radius: 6px; background: rgba(0,0,0,.08); }
+
+.search {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--r-sm);
+  background: rgba(0,0,0,.25); border: 1px solid var(--line);
+  color: var(--ink-3); transition: border-color .2s;
+}
+.search:focus-within { border-color: var(--line-2); color: var(--ink-2); }
+.search input { flex: 1; min-width: 0; color: var(--ink); }
+.search input::placeholder { color: var(--ink-3); }
+
+.history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; margin: 0 -6px; padding: 0 6px; }
+.history::-webkit-scrollbar { width: 4px; }
+.history::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 4px; }
+.group-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .14em; color: var(--ink-3); padding: 14px 10px 6px; }
+.chat-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: var(--r-xs);
+  color: var(--ink-2); font-size: 14px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  border: 1px solid transparent; transition: background .15s, color .15s;
+}
+.chat-item .dot { width: 5px; height: 5px; border-radius: 2px; background: var(--ink-3); flex-shrink: 0; }
+.chat-item:hover { background: var(--glass-2); color: var(--ink); }
+.chat-item.active { background: var(--glass-hi); border-color: var(--line); color: var(--ink); }
+.chat-item.active .dot { background: var(--ink); }
+
+.system-card {
+  border-radius: var(--r-md); padding: 14px;
+  background: rgba(0,0,0,.3); border: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.system-row { display: flex; align-items: center; gap: 10px; }
+.system-title { font-family: var(--f-display); font-weight: 500; font-size: 14px; }
+.system-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-3); }
+.pulse { width: 8px; height: 8px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 0 rgba(255,255,255,.6); animation: pulse 2.4s infinite; }
+.pulse.small { width: 6px; height: 6px; }
+@keyframes pulse { 70% { box-shadow: 0 0 0 8px rgba(255,255,255,0); } 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); } }
+
+/* ---------- Principal ---------- */
+.main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.topbar { display: flex; align-items: center; gap: 10px; padding: 4px 6px 10px; }
+.topbar-title { flex: 1; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; font-size: 12px; color: var(--ink-2); }
+.topbar-actions { display: flex; gap: 8px; }
+.icon-btn {
+  width: 38px; height: 38px; border-radius: 12px;
+  display: grid; place-items: center; color: var(--ink-2);
+  transition: background .15s, color .15s, transform .15s;
+}
+.icon-btn:hover { color: var(--ink); background: var(--glass-hi); }
+.icon-btn:active { transform: scale(.94); }
+.icon-btn.subtle { width: 36px; height: 36px; border-radius: 11px; }
+
+.stage { flex: 1; overflow-y: auto; min-height: 0; padding: 0 6px; }
+.stage::-webkit-scrollbar { width: 6px; }
+.stage::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 6px; }
+
+/* ---------- Tela inicial ---------- */
+.welcome {
+  min-height: 100%; max-width: 760px; margin: 0 auto;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 24px 0 32px;
+  animation: rise .8s var(--ease) both;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+
+.orb { position: relative; width: 300px; height: 300px; margin-bottom: 26px; }
+.orb-ring { position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--line-2); }
+.orb-ring.r1 { animation: spin 14s linear infinite; border-top-color: rgba(255,255,255,.7); }
+.orb-ring.r2 { inset: 16px; animation: spin 9s linear infinite reverse; border-right-color: rgba(255,255,255,.55); }
+.orb-ring.r3 { inset: 32px; border-style: dashed; opacity: .5; animation: spin 30s linear infinite; }
+.orb-core {
+  position: absolute; inset: 38px;
+  display: grid; place-items: center;
+  animation: breathe 4s ease-in-out infinite;
+}
+.orb-core img { width: 100%; height: 100%; opacity: .72; filter: drop-shadow(0 0 24px rgba(255,255,255,.35)); }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes breathe { 50% { transform: scale(1.04); } }
+
+.eyebrow { font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 14px; }
+.greeting {
+  font-family: var(--f-display); font-weight: 500;
+  font-size: clamp(34px, 5.4vw, 58px); line-height: 1.05; letter-spacing: -.03em;
+}
+.greeting em { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; color: var(--ink-2); }
+.lead { margin-top: 12px; color: var(--ink-3); font-size: 16px; }
+
+/* ---------- Conversa ---------- */
+.thread { max-width: 760px; margin: 0 auto; padding: 16px 0 24px; display: flex; flex-direction: column; gap: 22px; }
+.msg { display: flex; gap: 12px; animation: rise .4s var(--ease) both; }
+.msg.user { justify-content: flex-end; }
+.msg.user .bubble {
+  max-width: 78%; padding: 12px 16px; border-radius: 20px 20px 6px 20px;
+  background: var(--ink); color: #0a0a0a;
+}
+.msg.ai .avatar { width: 30px; height: 30px; flex-shrink: 0; }
+.msg.ai .avatar img { width: 100%; height: 100%; display: block; }
+.msg.ai .body { flex: 1; min-width: 0; }
+.msg.ai .name { font-family: var(--f-display); font-weight: 600; font-size: 13px; letter-spacing: .14em; margin-bottom: 4px; }
+.msg.ai .name span { font-family: var(--f-mono); font-weight: 400; letter-spacing: 0; color: var(--ink-3); margin-left: 8px; font-size: 11px; }
+.msg.ai .text { color: var(--ink-2); }
+.typing { display: inline-flex; gap: 5px; padding: 8px 0; }
+.typing i { width: 6px; height: 6px; border-radius: 2px; background: var(--ink-2); animation: blink 1.2s infinite; }
+.typing i:nth-child(2) { animation-delay: .15s; }
+.typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes blink { 0%, 80%, 100% { opacity: .2; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+
+/* ---------- Caixa de mensagem ---------- */
+.composer-wrap { padding: 10px 6px 0; }
+.composer {
+  max-width: 760px; margin: 0 auto;
+  display: flex; align-items: flex-end; gap: 6px;
+  padding: 8px; border-radius: 22px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.composer:focus-within { border-color: var(--line-2); box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 0 0 4px rgba(255,255,255,.04), 0 20px 50px -20px rgba(0,0,0,.6); }
+.composer textarea {
+  flex: 1; resize: none; max-height: 180px; padding: 8px 6px;
+  font-size: 15px; line-height: 1.45; color: var(--ink);
+}
+.composer textarea::placeholder { color: var(--ink-3); }
+.send {
+  width: 38px; height: 38px; border-radius: 13px; flex-shrink: 0;
+  display: grid; place-items: center; background: var(--ink); color: #000;
+  transition: opacity .2s, transform .15s;
+}
+.send svg { stroke-width: 2; }
+.send:disabled { opacity: .25; cursor: default; }
+.send:not(:disabled):active { transform: scale(.92); }
+.footnote { text-align: center; font-size: 10.5px; color: var(--ink-3); padding: 10px 0 2px; letter-spacing: .06em; }
+
+/* ---------- Responsivo ---------- */
+.only-mobile { display: none; }
+
+@media (max-width: 760px) {
+  .app { grid-template-columns: 1fr; padding: 10px; }
+  .only-mobile { display: grid; }
+  .sidebar {
+    position: fixed; z-index: 20; top: 10px; bottom: 10px; left: 10px;
+    width: min(300px, calc(100% - 40px));
+    background: rgba(18,18,18,.82);
+    transform: translateX(calc(-100% - 20px)); transition: transform .35s var(--ease);
+  }
+  body.menu-open .sidebar { transform: none; }
+  .scrim { position: fixed; inset: 0; z-index: 15; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity .3s; display: block; }
+  body.menu-open .scrim { opacity: 1; pointer-events: auto; }
+  .orb { width: 220px; height: 220px; margin-bottom: 20px; }
+  .orb-ring.r2 { inset: 12px; } .orb-ring.r3 { inset: 24px; } .orb-core { inset: 28px; }
+  .msg.user .bubble { max-width: 88%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---------- Asafe: mensagens de outros agentes ---------- */
+.pulse.off { background: var(--ink-3); animation: none; box-shadow: none; }
+.msg.ai .text { white-space: pre-wrap; }
+.msg.ai.agent .agent-avatar {
+  display: grid; place-items: center; border-radius: 50%;
+  font-size: 10.5px; font-weight: 600; letter-spacing: .04em;
+  background: linear-gradient(160deg, var(--glass-hi), var(--glass)); border: 1px solid var(--line-2); color: var(--ink);
+}
+.msg.ai.agent .via { padding: 1px 6px; border-radius: 6px; border: 1px solid var(--line-2); color: var(--ink-2); letter-spacing: .06em; text-transform: uppercase; font-size: 9.5px; }
+.msg.ai.agent .route { font-size: 10.5px; color: var(--ink-3); margin: -2px 0 6px; letter-spacing: .02em; }
+.msg.ai.agent .route:empty { display: none; }
+.msg.ai.agent.failed .text { color: var(--ink-3); font-style: italic; }
+
+/* ---------- Respostas formatadas (Markdown) ---------- */
+.msg.ai .text.md { white-space: normal; }
+.text.md > * + * { margin-top: .7em; }
+.text.md h3, .text.md h4, .text.md h5, .text.md h6 { font-family: var(--f-display); font-weight: 600; color: var(--ink); letter-spacing: -.01em; line-height: 1.25; }
+.text.md h3 { font-size: 1.2em; } .text.md h4 { font-size: 1.08em; } .text.md h5, .text.md h6 { font-size: 1em; }
+.text.md strong { color: var(--ink); font-weight: 600; }
+.text.md ul, .text.md ol { padding-left: 1.3em; }
+.text.md li + li { margin-top: .25em; }
+.text.md li::marker { color: var(--ink-3); }
+.text.md code { font-family: var(--f-mono); font-size: .88em; padding: 1px 6px; border-radius: 6px; background: var(--glass-2); border: 1px solid var(--line); color: var(--ink); }
+.text.md pre { padding: 12px 14px; border-radius: var(--r-sm); background: rgba(0,0,0,.35); border: 1px solid var(--line); overflow-x: auto; }
+.text.md pre code { padding: 0; border: 0; background: none; font-size: 13px; }
+.text.md blockquote { padding: 2px 0 2px 12px; border-left: 2px solid var(--line-2); color: var(--ink-3); }
+.text.md hr { border: 0; border-top: 1px solid var(--line); }
+.md-table { overflow-x: auto; border-radius: var(--r-sm); border: 1px solid var(--line); }
+.text.md table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+.text.md th, .text.md td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--line); }
+.text.md th { font-family: var(--f-display); font-weight: 600; color: var(--ink); background: var(--glass); }
+.text.md tr:last-child td { border-bottom: 0; }
+
+/* ---------- Controle de interface (ui.*) ---------- */
+.msg.op .via { padding: 1px 6px; border-radius: 6px; border: 1px solid var(--line-2); color: var(--ink-2); letter-spacing: .06em; text-transform: uppercase; font-size: 9.5px; font-weight: 400; }
+.op-card {
+  margin-top: 6px; border-radius: var(--r-md); padding: 14px;
+  background: linear-gradient(160deg, var(--glass-2), var(--glass));
+  border: 1px solid var(--line); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+}
+.op-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.op-title { font-family: var(--f-display); font-weight: 600; font-size: 14px; flex: 1; }
+.op-state { font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .08em; }
+.op-stop { font-size: 11px; padding: 5px 10px; border-radius: 9px; background: var(--ink); color: #000; letter-spacing: .04em; }
+.op-stop:hover { opacity: .85; }
+.op-steps { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.op-step { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; padding: 7px 10px; border-radius: var(--r-xs); background: rgba(0,0,0,.22); border: 1px solid transparent; color: var(--ink-2); font-size: 14px; }
+.op-step .ico { width: 14px; text-align: center; color: var(--ink-3); }
+.op-step .lbl { flex: 1; min-width: 0; }
+.op-step .det { font-size: 11px; color: var(--ink-3); }
+.op-step.run { border-color: var(--line-2); color: var(--ink); }
+.op-step.run .ico { animation: spin 1.2s linear infinite; display: inline-block; color: var(--ink); }
+.op-step.ok .ico { color: var(--ink); }
+.op-step.ok { color: var(--ink); }
+.op-step.err { border-color: rgba(255,255,255,.22); }
+.op-step.err .ico, .op-step.err .det { color: var(--ink); }
+.op-step.err .det { font-family: var(--f-body); font-size: 12.5px; flex-basis: 100%; padding-left: 24px; }
+.op-step.stop { opacity: .5; }
+.op-step.stop .det { font-family: var(--f-body); font-size: 12px; }
+.op-confirm { flex-basis: 100%; margin: 6px 0 2px 24px; padding: 10px 12px; border-radius: var(--r-xs); border: 1px solid var(--line-2); background: rgba(255,255,255,.04); }
+.op-confirm p { font-size: 13px; color: var(--ink); margin-bottom: 8px; }
+.op-confirm div { display: flex; gap: 8px; }
+.op-confirm button { font-size: 12.5px; padding: 6px 12px; border-radius: 9px; border: 1px solid var(--line-2); }
+.op-confirm .yes { background: var(--ink); color: #000; border-color: var(--ink); }
+.op-confirm .no:hover { background: var(--glass-hi); }
+.op-out:empty { display: none; }
+.op-out { margin-top: 10px; }
+.op-snap { border-radius: var(--r-xs); border: 1px solid var(--line); background: rgba(0,0,0,.25); }
+.op-snap summary { cursor: pointer; padding: 8px 12px; font-size: 11.5px; color: var(--ink-2); }
+.op-snap ul { list-style: none; padding: 0 12px 10px; display: flex; flex-direction: column; gap: 3px; max-height: 260px; overflow-y: auto; }
+.op-snap li { display: flex; gap: 8px; align-items: baseline; font-size: 13px; }
+.op-snap .role { font-size: 10.5px; color: var(--ink-3); min-width: 70px; }
+.op-snap .nm { color: var(--ink); }
+.op-snap .val, .op-snap .st { font-size: 11px; color: var(--ink-3); }
+.op-snap .prot { font-size: 10px; padding: 0 5px; border-radius: 5px; border: 1px solid var(--line-2); color: var(--ink-2); }
+.op-text { max-height: 140px; overflow-y: auto; padding: 8px 12px 12px; font-size: 12.5px; color: var(--ink-3); white-space: pre-wrap; border-top: 1px solid var(--line); }
+
+</style>
+</head>
+<body>
+  <!-- Fundo: formas monocromáticas desfocadas que dão vida ao vidro fosco -->
+  <div class="backdrop" aria-hidden="true">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+    <div class="grid"></div>
+    <div class="grain"></div>
+  </div>
+
+  <div class="app">
+    <!-- ============ BARRA LATERAL ============ -->
+    <aside class="sidebar glass" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjY3MiAyMTAgNjYwIDY2MCIgZmlsbD0iI2ZmZiI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNjg2IDM2MEw4OTAgMjQyVjQ2M0w5NzMgNTU3TDg5MCA2MzhWODQyTDY4NiA3MjJaIE03NTcgNDAxTDgyMiAzNjNWNDYwTDg5MCA1NDVMODIyIDU5NVY3MjJMNzU3IDY4NFogTTExMTYgMjM3TDEzMTggMzU1VjcyMkwxMTE0IDg0MFY2NTRMMTAzMCA1NTdMMTExNiA0NzVaIE0xMTgxIDM1N0wxMjQ3IDM5N1Y2ODNMMTE4MSA3MjFWNjU0TDExMTQgNTcwTDExODEgNTIwWiBNOTI5IDQ0OEgxMDc2TDEwMDIgNTU3TDEwNzYgNjY3SDkyOUwxMDAyIDU1N1oiLz48L3N2Zz4K" alt="" /></div>
+        <div class="brand-text">
+          <span class="brand-name">HORÁCIO</span>
+          <span class="brand-sub mono">assistente pessoal · v0.1</span>
+        </div>
+        <button class="icon-btn only-mobile" id="closeSidebar" aria-label="Fechar menu">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+
+      <button class="new-chat" id="newChat">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Nova conversa</span>
+        <kbd class="mono">⌘K</kbd>
+      </button>
+
+      <label class="search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="text" placeholder="Buscar conversas" />
+      </label>
+
+      <nav class="history" aria-label="Histórico">
+        <p class="group-label mono">Hoje</p>
+        <a class="chat-item active" href="#"><span class="dot"></span>Planejamento da semana</a>
+        <a class="chat-item" href="#"><span class="dot"></span>Resumo dos e-mails</a>
+        <p class="group-label mono">Ontem</p>
+        <a class="chat-item" href="#"><span class="dot"></span>Ideias para o projeto</a>
+        <a class="chat-item" href="#"><span class="dot"></span>Lembretes de reunião</a>
+        <p class="group-label mono">Últimos 7 dias</p>
+        <a class="chat-item" href="#"><span class="dot"></span>Pesquisa de mercado</a>
+        <a class="chat-item" href="#"><span class="dot"></span>Rotina de treinos</a>
+        <a class="chat-item" href="#"><span class="dot"></span>Revisão de contrato</a>
+      </nav>
+
+      <!-- Sem perfil: apenas o estado do sistema -->
+      <div class="system-card">
+        <div class="system-row">
+          <span class="pulse"></span>
+          <span class="system-title">Sistema online</span>
+        </div>
+        <div class="system-meta mono">
+          <span>Identificado: Sr. Nathanael</span>
+          <span id="clock">--:--</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="scrim only-mobile" id="scrim"></div>
+
+    <!-- ============ ÁREA PRINCIPAL ============ -->
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn only-mobile" id="openSidebar" aria-label="Abrir menu">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+        </button>
+        <div class="topbar-title">
+          <span class="chip glass-chip mono"><span class="pulse small"></span>Horácio · Núcleo</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-btn glass-chip" aria-label="Modo voz" title="Modo voz">
+            <svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></svg>
+          </button>
+          <button class="icon-btn glass-chip" aria-label="Configurações" title="Configurações">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="stage" id="stage">
+        <!-- Tela inicial -->
+        <div class="welcome" id="welcome">
+          <div class="orb" aria-hidden="true">
+            <div class="orb-ring r1"></div>
+            <div class="orb-ring r2"></div>
+            <div class="orb-ring r3"></div>
+            <div class="orb-core"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjY3MiAyMTAgNjYwIDY2MCIgZmlsbD0iI2ZmZiI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNjg2IDM2MEw4OTAgMjQyVjQ2M0w5NzMgNTU3TDg5MCA2MzhWODQyTDY4NiA3MjJaIE03NTcgNDAxTDgyMiAzNjNWNDYwTDg5MCA1NDVMODIyIDU5NVY3MjJMNzU3IDY4NFogTTExMTYgMjM3TDEzMTggMzU1VjcyMkwxMTE0IDg0MFY2NTRMMTAzMCA1NTdMMTExNiA0NzVaIE0xMTgxIDM1N0wxMjQ3IDM5N1Y2ODNMMTE4MSA3MjFWNjU0TDExMTQgNTcwTDExODEgNTIwWiBNOTI5IDQ0OEgxMDc2TDEwMDIgNTU3TDEwNzYgNjY3SDkyOUwxMDAyIDU1N1oiLz48L3N2Zz4K" alt="Horácio" /></div>
+          </div>
+
+          <p class="eyebrow mono" id="dateLine">—</p>
+          <h1 class="greeting">
+            <span id="greet">Olá</span>, <em>Sr. Nathanael.</em>
+          </h1>
+          <p class="lead">Em que posso ajudar hoje?</p>
+        </div>
+
+        <!-- Conversa -->
+        <div class="thread" id="thread" hidden></div>
+      </section>
+
+      <!-- Caixa de mensagem -->
+      <footer class="composer-wrap">
+        <form class="composer glass" id="composer" autocomplete="off">
+          <button type="button" class="icon-btn subtle" aria-label="Anexar">
+            <svg viewBox="0 0 24 24"><path d="M21 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9"/></svg>
+          </button>
+          <textarea id="input" rows="1" placeholder="Fale com o Horácio…"></textarea>
+          <button type="button" class="icon-btn subtle" aria-label="Falar">
+            <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          </button>
+          <button type="submit" class="send" id="send" aria-label="Enviar" disabled>
+            <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          </button>
+        </form>
+        <p class="footnote mono">Horácio · interface em construção — etapa 1</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+// HORÁCIO — Etapa 1: apenas interface.
+// A "resposta" abaixo é um marcador visual; a inteligência entra nas próximas etapas.
+
+const $ = (s) => document.querySelector(s);
+const input = $("#input");
+const send = $("#send");
+const form = $("#composer");
+const welcome = $("#welcome");
+const thread = $("#thread");
+const stage = $("#stage");
+
+/* Saudação, data e relógio */
+function updateTime() {
+  const now = new Date();
+  const h = now.getHours();
+  $("#greet").textContent = h < 5 ? "Boa noite" : h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite";
+  $("#dateLine").textContent = now.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" });
+  $("#clock").textContent = now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+}
+updateTime();
+setInterval(updateTime, 15000);
+
+/* Caixa de texto que cresce */
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = input.scrollHeight + "px";
+  send.disabled = !input.value.trim();
+});
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
+});
+
+/* Mensagens */
+const time = () => new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+const scrollDown = () => stage.scrollTo({ top: stage.scrollHeight, behavior: "smooth" });
+
+function addUser(text) {
+  const el = document.createElement("div");
+  el.className = "msg user";
+  const b = document.createElement("div");
+  b.className = "bubble";
+  b.textContent = text;
+  el.append(b);
+  thread.append(el);
+}
+
+function addAi() {
+  const el = document.createElement("div");
+  el.className = "msg ai";
+  el.innerHTML = `
+    <div class="avatar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjY3MiAyMTAgNjYwIDY2MCIgZmlsbD0iI2ZmZiI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNjg2IDM2MEw4OTAgMjQyVjQ2M0w5NzMgNTU3TDg5MCA2MzhWODQyTDY4NiA3MjJaIE03NTcgNDAxTDgyMiAzNjNWNDYwTDg5MCA1NDVMODIyIDU5NVY3MjJMNzU3IDY4NFogTTExMTYgMjM3TDEzMTggMzU1VjcyMkwxMTE0IDg0MFY2NTRMMTAzMCA1NTdMMTExNiA0NzVaIE0xMTgxIDM1N0wxMjQ3IDM5N1Y2ODNMMTE4MSA3MjFWNjU0TDExMTQgNTcwTDExODEgNTIwWiBNOTI5IDQ0OEgxMDc2TDEwMDIgNTU3TDEwNzYgNjY3SDkyOUwxMDAyIDU1N1oiLz48L3N2Zz4K" alt="" /></div>
+    <div class="body">
+      <div class="name">HORÁCIO<span>${time()}</span></div>
+      <div class="text"><span class="typing"><i></i><i></i><i></i></span></div>
+    </div>`;
+  thread.append(el);
+  scrollDown();
+  setTimeout(() => {
+    el.querySelector(".text").textContent =
+      "Entendido, Sr. Nathanael. Meu núcleo ainda está sendo construído — por enquanto, esta é apenas a interface.";
+    scrollDown();
+  }, 1400);
+}
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = input.value.trim();
+  if (!text) return;
+  welcome.hidden = true;
+  thread.hidden = false;
+  if (!(window.horacioAsafe && window.horacioAsafe.handle(text))) {
+    addUser(text);
+    addAi();
+  }
+  input.value = "";
+  input.style.height = "auto";
+  send.disabled = true;
+});
+
+/* Nova conversa */
+function reset() {
+  thread.innerHTML = "";
+  thread.hidden = true;
+  welcome.hidden = false;
+  input.focus();
+}
+$("#newChat").addEventListener("click", reset);
+document.addEventListener("keydown", (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); reset(); }
+});
+
+/* Menu no celular */
+const toggleMenu = (open) => document.body.classList.toggle("menu-open", open);
+$("#openSidebar").addEventListener("click", () => toggleMenu(true));
+$("#closeSidebar").addEventListener("click", () => toggleMenu(false));
+$("#scrim").addEventListener("click", () => toggleMenu(false));
+
+</script>
+  <script>
+/* =========================================================
+   AsafeLink · SDK de conexão de um agente ao Asafe
+   Arquivo único, sem dependências. Inclua com <script> (ou cole
+   dentro do HTML de arquivo único) e use window.AsafeLink.
+
+   const link = AsafeLink.connect({
+     id: 'miqueias', name: 'Miquéias', role: 'IA auxiliar', kind: 'ia',
+     actions: {
+       'chat.ask': { desc: 'Faz uma pergunta', handler: async (payload, ctx) => ({ reply: '...' }) }
+     }
+   });
+   const r = await link.request('miqueias', 'chat.ask', { prompt: 'Olá' });
+
+   Transporte:
+   - "server": servidor Asafe (node server/asafe-server.js), padrão http://localhost:7300
+   - "local":  mesmo navegador, via BroadcastChannel; a página do Asafe precisa estar aberta
+   Protocolo completo: protocol/PROTOCOLO.md
+   ========================================================= */
+(function (root) {
+  const VERSION = 1;
+  const CORE = 'asafe';
+  const CHANNEL = 'asafe-bus';
+  const DEFAULT_SERVER = 'http://localhost:7300';
+  const HEARTBEAT = 5000;
+
+  const uid = () => 'msg_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-5);
+
+  function connect(opts) {
+    if (!opts || !opts.id) throw new Error('AsafeLink: informe o id do agente (ex.: "horacio").');
+    const me = {
+      id: opts.id, name: opts.name || opts.id, role: opts.role || '', kind: opts.kind || 'ia'
+    };
+    const actions = opts.actions || {};
+    const listeners = { status: new Set(), event: new Set(), message: new Set() };
+    const pending = new Map(); // id -> { resolve, reject, timer, onProgress }
+    const seen = new Set();
+
+    let status = 'connecting';
+    let mode = null;
+    let bc = null, es = null, server = null;
+    let lastCore = 0, hbTimer = null, watchTimer = null, closed = false;
+
+    const emit = (k, v) => listeners[k].forEach(fn => { try { fn(v); } catch (e) { console.error(e); } });
+    const setStatus = s => { if (s !== status) { status = s; emit('status', { status, mode }); } };
+
+    const envelope = (type, to, action, payload, extra) => Object.assign({
+      asafe: VERSION, id: uid(), type, from: me.id, to, action, payload, ts: Date.now()
+    }, extra || {});
+
+    const hello = () => envelope('hello', CORE, null, {
+      name: me.name, role: me.role, kind: me.kind,
+      actions: Object.keys(actions).map(name => ({ name, desc: actions[name].desc || '' }))
+    });
+
+    /* ---------- envio ---------- */
+    function post(env) {
+      if (mode === 'local') { bc.postMessage({ dir: 'up', env }); return Promise.resolve(); }
+      if (mode === 'server') {
+        return fetch(server + '/send', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(env)
+        }).then(r => r.json()).then(res => {
+          if (!res.ok && env.type === 'request') settle(env.id, false, null, { code: res.code, message: res.message });
+        }).catch(() => {
+          if (env.type === 'request') settle(env.id, false, null, { code: 'offline', message: 'Servidor do Asafe indisponível.' });
+        });
+      }
+      return Promise.reject(new Error('AsafeLink ainda não conectado.'));
+    }
+
+    function settle(id, ok, payload, error) {
+      const p = pending.get(id);
+      if (!p) return;
+      pending.delete(id);
+      clearTimeout(p.timer);
+      if (ok) p.resolve(payload);
+      else {
+        const e = new Error((error && error.message) || 'Falha na linha de servidor.');
+        e.code = (error && error.code) || 'error';
+        p.reject(e);
+      }
+    }
+
+    /* ---------- recebimento ---------- */
+    async function receive(env) {
+      if (!env || env.to !== me.id && env.to !== '*') return;
+      if (seen.has(env.id)) return;
+      seen.add(env.id);
+      if (seen.size > 500) seen.delete(seen.values().next().value);
+      emit('message', env);
+
+      if (env.type === 'response') return settle(env.replyTo, env.ok !== false, env.payload, env.error);
+      if (env.type === 'progress') {
+        const p = pending.get(env.replyTo);
+        if (p && p.onProgress) try { p.onProgress(env.payload); } catch (e) { console.error(e); }
+        return;
+      }
+      if (env.type === 'event') return emit('event', env);
+      if (env.type !== 'request') return;
+
+      const respond = (ok, payload, error) => post(envelope('response', env.from, env.action, ok ? payload : undefined,
+        { replyTo: env.id, ok, error: ok ? undefined : error }));
+      const act = actions[env.action];
+      if (!act) return respond(false, null, { code: 'unknown_action', message: `${me.name} não conhece a ação "${env.action}".` });
+      const ctx = {
+        from: env.from, id: env.id,
+        progress: data => post(envelope('progress', env.from, env.action, data, { replyTo: env.id }))
+      };
+      try {
+        const out = await act.handler(env.payload || {}, ctx);
+        respond(true, out === undefined ? {} : out);
+      } catch (e) {
+        respond(false, null, { code: e.code || 'handler_error', message: e.message || String(e) });
+      }
+    }
+
+    /* ---------- transportes ---------- */
+    function startLocal() {
+      mode = 'local';
+      if (typeof BroadcastChannel === 'undefined') { setStatus('offline'); return; }
+      bc = new BroadcastChannel(CHANNEL);
+      bc.onmessage = e => {
+        const m = e.data || {};
+        if (m.dir !== 'down' || !m.env) return;
+        if (m.env.from === CORE && m.env.action === 'core.heartbeat') {
+          const first = Date.now() - lastCore > HEARTBEAT * 2;
+          lastCore = Date.now();
+          if (first) post(hello());
+          setStatus('online');
+          return;
+        }
+        receive(m.env);
+      };
+      post(hello());
+      watchTimer = setInterval(() => setStatus(Date.now() - lastCore < HEARTBEAT * 2 ? 'online' : 'waiting'), 2000);
+      setStatus('waiting');
+    }
+
+    function startServer(url) {
+      mode = 'server';
+      server = url.replace(/\/$/, '');
+      es = new EventSource(`${server}/stream?agent=${encodeURIComponent(me.id)}`);
+      es.onopen = () => { post(hello()); setStatus('online'); };
+      es.onerror = () => setStatus('waiting');
+      es.onmessage = e => { try { receive(JSON.parse(e.data)); } catch (err) { /* ignore */ } };
+    }
+
+    async function probe(url) {
+      try {
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 900);
+        const r = await fetch(url.replace(/\/$/, '') + '/status', { signal: ctrl.signal });
+        clearTimeout(t);
+        const j = await r.json();
+        return j && j.asafe === VERSION;
+      } catch (e) { return false; }
+    }
+
+    (async () => {
+      const url = opts.server === undefined ? DEFAULT_SERVER : opts.server;
+      if (url && opts.transport !== 'local' && await probe(url)) startServer(url);
+      else startLocal();
+      if (closed) return;
+      hbTimer = setInterval(() => post(hello()).catch(() => {}), HEARTBEAT);
+      emit('status', { status, mode });
+    })();
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('pagehide', () => api.close());
+    }
+
+    /* ---------- API ---------- */
+    const api = {
+      get id() { return me.id; },
+      get status() { return status; },
+      get mode() { return mode; },
+
+      /** Pede para outro agente executar uma ação. Resolve com o payload da resposta. */
+      request(to, action, payload = {}, { timeout = 90000, onProgress } = {}) {
+        return new Promise((resolve, reject) => {
+          const env = envelope('request', to, action, payload);
+          const timer = setTimeout(() => settle(env.id, false, null, {
+            code: 'timeout',
+            message: mode === 'local'
+              ? 'Sem resposta. Confira se o Asafe e o agente de destino estão abertos.'
+              : 'Sem resposta do agente de destino.'
+          }), timeout);
+          pending.set(env.id, { resolve, reject, timer, onProgress });
+          const go = () => post(env).catch(e => settle(env.id, false, null, { code: 'offline', message: e.message }));
+          if (mode) go(); else { const off = api.on('status', () => { if (mode) { off(); go(); } }); }
+        });
+      },
+      /** Envia um evento sem esperar resposta. */
+      emit(to, action, payload = {}) { return post(envelope('event', to, action, payload)); },
+      /** Lista os agentes do Asafe, quem está online e as ações de cada um. */
+      roster() { return api.request(CORE, 'roster', {}, { timeout: 8000 }).then(r => r.agents); },
+      /** Registra mais uma ação depois de conectado. */
+      handle(name, handler, desc = '') { actions[name] = { handler, desc }; if (mode) post(hello()); },
+      on(kind, fn) { listeners[kind].add(fn); return () => listeners[kind].delete(fn); },
+      close() {
+        if (closed) return;
+        closed = true;
+        try { post(envelope('bye', CORE)); } catch (e) { /* ignore */ }
+        clearInterval(hbTimer); clearInterval(watchTimer);
+        if (es) es.close();
+        if (bc) setTimeout(() => bc.close(), 50);
+        setStatus('offline');
+      }
+    };
+    return api;
+  }
+
+  root.AsafeLink = { connect, VERSION, CORE };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+// HORÁCIO ⇄ ASAFE — linha de servidor até os outros agentes.
+// O Horácio entende pedidos como "peça ao Miquéias que …" ou "@miqueias …",
+// envia pelo Asafe e mostra a resposta do agente aqui na conversa.
+// Protocolo: companynathanael/Asafe (protocol/PROTOCOLO.md)
+
+(function () {
+  if (!window.AsafeLink) return;
+
+  const KNOWN = { miqueias: "Miquéias", asafe: "Asafe" };
+  let roster = [];
+  const nameOf = (id) => (roster.find((a) => a.id === id) || {}).name || KNOWN[id] || id.charAt(0).toUpperCase() + id.slice(1);
+  const norm = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const knownIds = () => new Set([...Object.keys(KNOWN), ...roster.map((a) => a.id)].filter((id) => id !== "asafe" && id !== "horacio"));
+
+  const link = AsafeLink.connect({
+    id: "horacio", name: "Horácio", role: "Agente principal", kind: "principal",
+    actions: {
+      ping: { desc: "Mostra se o Horácio está ativo", handler: () => ({ ready: true }) },
+      notify: {
+        desc: "Mostra uma mensagem de outro agente na conversa do Horácio. payload: { text }",
+        handler: ({ text }, ctx) => { showAgent(ctx.from).set(String(text || "")); return { shown: true }; },
+      },
+    },
+  });
+
+  /* ---------- status no cartão do sistema ---------- */
+  const title = document.querySelector(".system-title");
+  const pulse = document.querySelector(".system-card .pulse");
+  function paintStatus() {
+    const online = roster.filter((a) => a.online && a.id !== "horacio").length;
+    const s = link.status;
+    title.textContent = s === "online" ? `Asafe conectado · ${online} agente${online === 1 ? "" : "s"}` : s === "waiting" ? "Aguardando o Asafe" : "Asafe desconectado";
+    pulse.classList.toggle("off", s !== "online");
+  }
+  async function refreshRoster() {
+    if (link.status !== "online") return paintStatus();
+    try { roster = await link.roster(); } catch (e) { /* Asafe fechado */ }
+    paintStatus();
+  }
+  link.on("status", refreshRoster);
+  setInterval(refreshRoster, 10000);
+
+  /* ---------- entender o pedido ---------- */
+  function parse(text) {
+    const t = norm(text.trim());
+    if (/^\/(agentes|asafe)$/.test(t)) return { roster: true };
+    const ids = knownIds();
+    const pick = (id, prompt) => (ids.has(id) && prompt.trim() ? { to: id, prompt: text.trim().slice(text.trim().length - prompt.length).trim() } : null);
+    let m = t.match(/^@([a-z0-9-]+)[\s,:]+([\s\S]+)$/);
+    if (m) return pick(m[1], m[2]);
+    m = t.match(/^([a-z0-9-]+)\s*[,:]\s*([\s\S]+)$/);
+    if (m) return pick(m[1], m[2]);
+    m = t.match(/^(?:horacio[\s,]+)?(?:por favor[\s,]+)?(?:peca|pede|pedir|pergunte|pergunta|perguntar|diga|diz|fale|fala|mande|manda|solicite|solicita)\s+(?:ao|a|para o|para a|pro|pra|para)\s+([a-z0-9-]+)\s+(?:que\s+|para\s+|pra\s+|se\s+)?([\s\S]+)$/);
+    if (m) return pick(m[1], m[2]);
+    return null;
+  }
+
+
+  /* ---------- Markdown seguro (escapa o HTML antes de formatar) ---------- */
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const inline = (s) => esc(s)
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/__([^_]+)__/g, "<strong>$1</strong>")
+    .replace(/(^|[^*])\*([^*\s][^*]*)\*/g, "$1<em>$2</em>");
+  function md(src) {
+    const lines = src.replace(/\r/g, "").split("\n");
+    const out = [];
+    let i = 0;
+    while (i < lines.length) {
+      const l = lines[i];
+      if (/^```/.test(l)) {
+        const code = []; i++;
+        while (i < lines.length && !/^```/.test(lines[i])) code.push(lines[i++]);
+        i++; out.push(`<pre><code>${esc(code.join("\n"))}</code></pre>`); continue;
+      }
+      let m = l.match(/^(#{1,6})\s+(.*)$/);
+      if (m) { const n = Math.min(m[1].length + 2, 6); out.push(`<h${n}>${inline(m[2])}</h${n}>`); i++; continue; }
+      if (/^\s*([-*_])\s*\1\s*\1[\s\1]*$/.test(l)) { out.push("<hr>"); i++; continue; }
+      if (/^\s*\|.*\|\s*$/.test(l) && i + 1 < lines.length && /^\s*\|?[\s:|-]+\|?\s*$/.test(lines[i + 1]) && lines[i + 1].includes("-")) {
+        const cells = (r) => r.trim().replace(/^\||\|$/g, "").split("|").map((c) => inline(c.trim()));
+        const head = cells(l); i += 2; const rows = [];
+        while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) rows.push(cells(lines[i++]));
+        out.push(`<div class="md-table"><table><thead><tr>${head.map((c) => `<th>${c}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`);
+        continue;
+      }
+      if (/^\s*([-*+]|\d+[.)])\s+/.test(l)) {
+        const ordered = /^\s*\d/.test(l); const items = [];
+        while (i < lines.length && /^\s*([-*+]|\d+[.)])\s+/.test(lines[i])) items.push(inline(lines[i++].replace(/^\s*([-*+]|\d+[.)])\s+/, "")));
+        const tag = ordered ? "ol" : "ul";
+        out.push(`<${tag}>${items.map((x) => `<li>${x}</li>`).join("")}</${tag}>`); continue;
+      }
+      if (/^>\s?/.test(l)) {
+        const q = [];
+        while (i < lines.length && /^>\s?/.test(lines[i])) q.push(inline(lines[i++].replace(/^>\s?/, "")));
+        out.push(`<blockquote>${q.join("<br>")}</blockquote>`); continue;
+      }
+      if (!l.trim()) { i++; continue; }
+      const p = [];
+      while (i < lines.length && lines[i].trim() && !/^(#{1,6}\s|```|>|\s*([-*+]|\d+[.)])\s+|\s*\|.*\|\s*$)/.test(lines[i])) p.push(inline(lines[i++]));
+      if (!p.length) p.push(inline(lines[i++]));
+      out.push(`<p>${p.join("<br>")}</p>`);
+    }
+    return out.join("");
+  }
+
+  /* ---------- mensagens na conversa ---------- */
+  function showAgent(agentId, note) {
+    const el = document.createElement("div");
+    el.className = "msg ai agent";
+    el.innerHTML = `
+      <div class="avatar agent-avatar mono"></div>
+      <div class="body">
+        <div class="name"><b></b><span class="via mono">via Asafe</span><span>${time()}</span></div>
+        <div class="route mono"></div>
+        <div class="text"><span class="typing"><i></i><i></i><i></i></span></div>
+      </div>`;
+    el.querySelector(".agent-avatar").textContent = nameOf(agentId).slice(0, 2).toUpperCase();
+    el.querySelector(".name b").textContent = nameOf(agentId).toUpperCase();
+    el.querySelector(".route").textContent = note || "";
+    thread.append(el);
+    scrollDown();
+    const txt = el.querySelector(".text");
+    let buf = "";
+    return {
+      el,
+      append(d) { buf += d; txt.classList.add("md"); txt.innerHTML = md(buf); scrollDown(); },
+      set(s) { buf = s; txt.classList.add("md"); txt.innerHTML = md(s); scrollDown(); },
+      fail(msg) { el.classList.add("failed"); txt.classList.remove("md"); txt.textContent = msg; scrollDown(); },
+      note(s) { el.querySelector(".route").textContent = s; },
+    };
+  }
+
+  function horacioSays(textContent) {
+    const el = document.createElement("div");
+    el.className = "msg ai";
+    el.innerHTML = `
+      <div class="avatar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjY3MiAyMTAgNjYwIDY2MCIgZmlsbD0iI2ZmZiI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNjg2IDM2MEw4OTAgMjQyVjQ2M0w5NzMgNTU3TDg5MCA2MzhWODQyTDY4NiA3MjJaIE03NTcgNDAxTDgyMiAzNjNWNDYwTDg5MCA1NDVMODIyIDU5NVY3MjJMNzU3IDY4NFogTTExMTYgMjM3TDEzMTggMzU1VjcyMkwxMTE0IDg0MFY2NTRMMTAzMCA1NTdMMTExNiA0NzVaIE0xMTgxIDM1N0wxMjQ3IDM5N1Y2ODNMMTE4MSA3MjFWNjU0TDExMTQgNTcwTDExODEgNTIwWiBNOTI5IDQ0OEgxMDc2TDEwMDIgNTU3TDEwNzYgNjY3SDkyOUwxMDAyIDU1N1oiLz48L3N2Zz4K" alt="" /></div>
+      <div class="body"><div class="name">HORÁCIO<span>${time()}</span></div><div class="text"></div></div>`;
+    el.querySelector(".text").textContent = textContent;
+    thread.append(el);
+    scrollDown();
+  }
+
+  async function ask(to, prompt) {
+    const view = showAgent(to, `Horácio → Asafe → ${nameOf(to)}`);
+    try {
+      const r = await link.request(to, "chat.ask", { prompt }, { onProgress: (p) => p && p.delta && view.append(p.delta) });
+      view.set(r.reply || "(sem texto)");
+    } catch (e) {
+      view.fail(`Não consegui falar com ${nameOf(to)}: ${e.message}`);
+    }
+  }
+
+  async function showRoster() {
+    try {
+      roster = await link.roster();
+      paintStatus();
+      const lines = roster.filter((a) => a.id !== "horacio").map((a) =>
+        `• ${a.name}: ${a.online ? "conectado" : "desconectado"}${a.route ? "" : " (sem linha até o Asafe)"}${a.actions.length ? " · ações: " + a.actions.map((x) => x.name).join(", ") : ""}`);
+      horacioSays(lines.length ? `Agentes no Asafe:\n${lines.join("\n")}` : "Nenhum outro agente cadastrado no Asafe.");
+    } catch (e) {
+      horacioSays(`O Asafe não respondeu: ${e.message}`);
+    }
+  }
+
+  /** Chamado pelo app.js. Devolve true se o pedido foi para o Asafe. */
+  function handle(text) {
+    const cmd = parse(text);
+    if (!cmd) return false;
+    addUser(text);
+    if (cmd.roster) showRoster();
+    else ask(cmd.to, cmd.prompt);
+    return true;
+  }
+
+  window.horacioAsafe = { link, handle, parse, nameOf, knownIds, norm, md, horacioSays };
+})();
+
+</script>
+  <script>
+// HORÁCIO ⇄ ASAFE — controle de interface (ui.*), etapa 1: "as mãos".
+// O Sr. Nathanael dá ordens diretas ("Miquéias, clique em Nova conversa") e o
+// Horácio opera a tela do agente pelo Asafe, mostrando cada passo aqui.
+// Especificação: docs/CONTROLE.md
+
+(function () {
+  const H = window.horacioAsafe;
+  if (!H) return;
+  const { link, nameOf, knownIds, norm } = H;
+
+  /* ---------- entender a ordem ---------- */
+  const VERB = /^(?:por favor[\s,]+)?(clique|clica|clicar|aperte|aperta|apertar|abra|abre|abrir|digite|digita|digitar|envie|envia|enviar|pressione|pressiona|tecle|role|rola|rolar|espere|espera|aguarde|aguarda|leia|le|ler|mostre|mostra|ver|veja|descreva)\b/;
+
+  /** Separa os passos por ";" ou "e depois"/"depois", respeitando texto entre aspas. */
+  function splitSteps(s) {
+    const out = []; let cur = ""; let q = null;
+    for (let i = 0; i < s.length; i++) {
+      const c = s[i];
+      if (q) { cur += c; if (c === q) q = null; continue; }
+      if (c === '"' || c === "“" || c === "”") { q = c === "“" ? "”" : c; cur += c; continue; }
+      if (c === ";") { out.push(cur); cur = ""; continue; }
+      const rest = s.slice(i);
+      const m = rest.match(/^,?\s+(?:e\s+)?depois\s+/i);
+      if (m && cur.trim()) { out.push(cur); cur = ""; i += m[0].length - 1; continue; }
+      cur += c;
+    }
+    out.push(cur);
+    return out.map((x) => x.trim()).filter(Boolean);
+  }
+
+  const unquote = (s) => s.trim().replace(/^["“](.*)["”]$/s, "$1");
+  const target = (s) => s.trim().replace(/^(?:em|no|na|o|a|os|as|sobre)\s+/i, "").replace(/^(?:botao|botão|aba|item|menu|campo|link)\s+/i, "").replace(/^["“](.*)["”]$/, "$1").trim();
+
+  /** Converte um passo em português numa ação ui.*. */
+  function parseStep(raw) {
+    const s = raw.trim();
+    const n = norm(s);
+    let m;
+    if (/^(leia|le|ler|mostre|mostra|ver|veja|descreva)\s+(?:a\s+|sua\s+)?tela\b/.test(n)) return { action: "ui.snapshot", payload: {}, label: "Ler a tela" };
+    if (/^(envie|envia|enviar)(?:\s+a\s+mensagem)?\.?$/.test(n)) return { action: "ui.key", payload: { key: "Enter" }, label: "Enviar" };
+    if ((m = n.match(/^(pressione|pressiona|tecle|aperte|aperta|apertar)\s+(?:a\s+tecla\s+)?(enter|esc|escape|tab|seta para cima|seta para baixo)$/))) {
+      const key = { enter: "Enter", esc: "Escape", escape: "Escape", tab: "Tab", "seta para cima": "ArrowUp", "seta para baixo": "ArrowDown" }[m[2]];
+      return { action: "ui.key", payload: { key }, label: `Tecla ${key}` };
+    }
+    if ((m = n.match(/^(role|rola|rolar)\s*(?:para\s+|pra\s+|ate\s+o\s+|ao\s+)?(cima|baixo|topo|inicio|fim|final)?/))) {
+      const direction = { cima: "up", baixo: "down", topo: "top", inicio: "top", fim: "bottom", final: "bottom" }[m[2] || "baixo"];
+      return { action: "ui.scroll", payload: { direction }, label: `Rolar para ${m[2] || "baixo"}` };
+    }
+    if (/^(espere|espera|aguarde|aguarda)\b/.test(n)) {
+      const qm = s.match(/["“]([^"”]+)["”]/);
+      if (qm) return { action: "ui.wait", payload: { text: qm[1] }, label: `Esperar “${qm[1]}”` };
+      return { action: "ui.wait", payload: { idle: true }, label: "Esperar a resposta terminar" };
+    }
+    if (/^(digite|digita|digitar)\b/.test(n)) {
+      const body = s.replace(/^\S+\s*/, "");
+      const qm = body.match(/^["“]([\s\S]*?)["”]\s*(?:(?:no|na|em)\s+(?:campo\s+|caixa\s+)?(.+))?$/i);
+      const text = qm ? qm[1] : unquote(body);
+      const field = qm && qm[2] ? target(qm[2]) : null;
+      if (!text) return { error: "Faltou o texto para digitar." };
+      return { action: "ui.type", payload: field ? { name: field, text } : { text }, label: `Digitar “${text}”${field ? ` em ${field}` : ""}` };
+    }
+    if (/^(clique|clica|clicar|aperte|aperta|apertar|abra|abre|abrir)\b/.test(n)) {
+      const name = target(s.replace(/^\S+\s*/, ""));
+      if (!name) return { error: "Faltou dizer onde clicar." };
+      return { action: "ui.click", payload: { name }, label: `${/^ab/.test(n) ? "Abrir" : "Clicar em"} “${name}”` };
+    }
+    return { error: `Não entendi o passo “${s}”.` };
+  }
+
+  /** Reconhece "Miquéias, <verbo> …", "@miqueias <verbo> …" e "/tela miqueias". */
+  function parse(text) {
+    const t = text.trim();
+    const n = norm(t);
+    const ids = knownIds();
+    let m = n.match(/^\/tela\s+([a-z0-9-]+)$/);
+    if (m && ids.has(m[1])) return { to: m[1], steps: [parseStep("leia a tela")] };
+    m = n.match(/^(?:no\s+)?@?([a-z0-9-]+)\s*[,:]?\s+/);
+    if (!m || !ids.has(m[1])) return null;
+    const rest = t.slice(m[0].length).replace(/^por favor[\s,]+/i, "");
+    if (!VERB.test(norm(rest))) return null;
+    const steps = splitSteps(rest).map(parseStep);
+    // Se nem o primeiro passo é uma ordem de tela, é uma pergunta comum (chat.ask).
+    if (!steps.length || steps[0].error) return null;
+    return { to: m[1], steps };
+  }
+
+  /* ---------- cartão de operação ---------- */
+  const ICON = { wait: "○", run: "◌", ok: "✓", err: "✕", stop: "■" };
+
+  function opCard(to) {
+    const el = document.createElement("div");
+    el.className = "msg ai op";
+    el.innerHTML = `
+      <div class="avatar"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjY3MiAyMTAgNjYwIDY2MCIgZmlsbD0iI2ZmZiI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNjg2IDM2MEw4OTAgMjQyVjQ2M0w5NzMgNTU3TDg5MCA2MzhWODQyTDY4NiA3MjJaIE03NTcgNDAxTDgyMiAzNjNWNDYwTDg5MCA1NDVMODIyIDU5NVY3MjJMNzU3IDY4NFogTTExMTYgMjM3TDEzMTggMzU1VjcyMkwxMTE0IDg0MFY2NTRMMTAzMCA1NTdMMTExNiA0NzVaIE0xMTgxIDM1N0wxMjQ3IDM5N1Y2ODNMMTE4MSA3MjFWNjU0TDExMTQgNTcwTDExODEgNTIwWiBNOTI5IDQ0OEgxMDc2TDEwMDIgNTU3TDEwNzYgNjY3SDkyOUwxMDAyIDU1N1oiLz48L3N2Zz4K" alt="" /></div>
+      <div class="body">
+        <div class="name">HORÁCIO<span class="via mono">controle via Asafe</span><span class="t"></span></div>
+        <div class="op-card">
+          <div class="op-head">
+            <span class="op-title"></span>
+            <span class="op-state mono"></span>
+            <button type="button" class="op-stop mono">Parar</button>
+          </div>
+          <ol class="op-steps"></ol>
+          <div class="op-out"></div>
+        </div>
+      </div>`;
+    el.querySelector(".t").textContent = time();
+    el.querySelector(".op-title").textContent = `Horácio → Asafe → ${nameOf(to)}`;
+    thread.append(el);
+    scrollDown();
+    return el;
+  }
+
+  function stepRow(card, label) {
+    const li = document.createElement("li");
+    li.className = "op-step wait";
+    li.innerHTML = `<span class="ico mono"></span><span class="lbl"></span><span class="det mono"></span>`;
+    li.querySelector(".ico").textContent = ICON.wait;
+    li.querySelector(".lbl").textContent = label;
+    card.querySelector(".op-steps").append(li);
+    const set = (state, detail) => {
+      li.className = "op-step " + state;
+      li.querySelector(".ico").textContent = ICON[state];
+      if (detail !== undefined) li.querySelector(".det").textContent = detail;
+      scrollDown();
+    };
+    return { li, set };
+  }
+
+  function askConfirm(row, message) {
+    return new Promise((resolve) => {
+      const box = document.createElement("div");
+      box.className = "op-confirm";
+      box.innerHTML = `<p></p><div><button type="button" class="yes">Confirmar</button><button type="button" class="no">Cancelar</button></div>`;
+      box.querySelector("p").textContent = message || "Esta ação é protegida. Confirma?";
+      row.li.append(box);
+      scrollDown();
+      box.querySelector(".yes").onclick = () => { box.remove(); resolve(true); };
+      box.querySelector(".no").onclick = () => { box.remove(); resolve(false); };
+    });
+  }
+
+  function renderSnapshot(card, snap) {
+    const out = card.querySelector(".op-out");
+    const els = (snap && snap.elements) || [];
+    const wrap = document.createElement("details");
+    wrap.className = "op-snap";
+    wrap.open = true;
+    const sum = document.createElement("summary");
+    sum.className = "mono";
+    sum.textContent = `Tela de ${snap.app || "agente"}${snap.screen ? " · " + snap.screen : ""} · ${els.length} elementos`;
+    wrap.append(sum);
+    const list = document.createElement("ul");
+    els.slice(0, 60).forEach((e) => {
+      const li = document.createElement("li");
+      const role = document.createElement("span"); role.className = "role mono"; role.textContent = e.role;
+      const name = document.createElement("span"); name.className = "nm"; name.textContent = e.name || "(sem nome)";
+      li.append(role, name);
+      if (e.value) { const v = document.createElement("span"); v.className = "val mono"; v.textContent = `= ${String(e.value).slice(0, 60)}`; li.append(v); }
+      if (e.protected) { const p = document.createElement("span"); p.className = "prot mono"; p.textContent = "protegido"; li.append(p); }
+      if (e.state && e.state.length) { const st = document.createElement("span"); st.className = "st mono"; st.textContent = e.state.join(" · "); li.append(st); }
+      list.append(li);
+    });
+    wrap.append(list);
+    if (snap.text) { const p = document.createElement("p"); p.className = "op-text"; p.textContent = snap.text; wrap.append(p); }
+    out.append(wrap);
+    scrollDown();
+  }
+
+  /* ---------- execução ---------- */
+  let current = null;
+
+  link.on("event", (env) => {
+    if (env.action === "ui.stopped" && current && current.to === env.from) current.stop(`Parado pelo senhor no ${nameOf(env.from)}.`);
+  });
+
+  async function run(to, steps) {
+    const card = opCard(to);
+    const state = card.querySelector(".op-state");
+    const stopBtn = card.querySelector(".op-stop");
+    const rows = steps.map((s) => stepRow(card, s.label || s.error));
+    const bad = steps.findIndex((s) => s.error);
+    if (bad >= 0) {
+      rows[bad].set("err", steps[bad].error);
+      state.textContent = "não iniciado";
+      stopBtn.remove();
+      card.classList.add("done");
+      return;
+    }
+
+    let stopped = null;
+    const op = { to, stop: (why) => { if (!stopped) { stopped = why || "Parado."; state.textContent = "parado"; } } };
+    if (current) current.stop("Substituído por uma nova operação.");
+    current = op;
+    stopBtn.onclick = () => { op.stop("Parado pelo senhor."); link.request(to, "ui.control", { on: false, by: "horacio" }, { timeout: 5000 }).catch(() => {}); };
+
+    state.textContent = "conectando…";
+    try {
+      await link.request(to, "ui.control", { on: true, by: "horacio" }, { timeout: 8000 });
+    } catch (e) {
+      rows[0].set("err", e.message);
+      state.textContent = "falhou";
+      stopBtn.remove();
+      if (current === op) current = null;
+      return;
+    }
+
+    state.textContent = "operando";
+    let failed = false;
+    for (let i = 0; i < steps.length; i++) {
+      const row = rows[i];
+      if (stopped) { rows.slice(i).forEach((r, k) => r.set("stop", k === 0 ? stopped : "")); break; }
+      row.set("run", "");
+      const { action, payload } = steps[i];
+      const timeout = action === "ui.wait" ? (payload.timeout || 15000) + 5000 : 15000;
+      try {
+        let r;
+        try {
+          r = await link.request(to, action, payload, { timeout });
+        } catch (e) {
+          if (e.code !== "needs_confirmation") throw e;
+          row.set("run", "aguardando sua confirmação");
+          const ok = await askConfirm(row, e.message);
+          if (!ok) { op.stop("Cancelado pelo senhor."); row.set("stop", "Cancelado pelo senhor."); continue; }
+          if (stopped) { row.set("stop", ""); continue; }
+          row.set("run", "");
+          r = await link.request(to, action, Object.assign({}, payload, { confirm: true }), { timeout });
+        }
+        if (stopped) { row.set("stop", ""); continue; }
+        row.set("ok", r && r.target ? (r.target.name || r.target.ref || "") : "");
+        if (action === "ui.snapshot") renderSnapshot(card, r || {});
+      } catch (e) {
+        if (stopped) { row.set("stop", stopped); continue; }
+        let msg = e.message;
+        if (e.code === "ambiguous") msg += " Diga qual exatamente.";
+        row.set("err", msg);
+        rows.slice(i + 1).forEach((r2) => r2.set("stop", ""));
+        failed = true;
+        break;
+      }
+    }
+
+    link.request(to, "ui.control", { on: false, by: "horacio" }, { timeout: 5000 }).catch(() => {});
+    state.textContent = stopped ? "parado" : failed ? "parou com erro" : "concluído";
+    stopBtn.remove();
+    card.classList.add("done");
+    if (current === op) current = null;
+  }
+
+  /* ---------- liga no fluxo de mensagens do Horácio ---------- */
+  const baseHandle = H.handle;
+  H.handle = function (text) {
+    const cmd = parse(text);
+    if (!cmd) return baseHandle(text);
+    addUser(text);
+    run(cmd.to, cmd.steps);
+    return true;
+  };
+  H.controle = { parse, parseStep, splitSteps, run };
+})();
+
+</script>
+</body>
+</html>

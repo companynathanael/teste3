@@ -23,3 +23,15 @@ Na caixa de mensagem:
 - `/agentes` — lista os agentes conectados
 
 Para funcionar, a página do Asafe precisa estar aberta no mesmo navegador (ou o servidor `node server/asafe-server.js` rodando), com as linhas Asafe ⇄ Horácio e Asafe ⇄ Miquéias ligadas.
+
+## Etapa 2.1 — Controle do Miquéias (as "mãos")
+O Horácio opera a tela de outro agente pelo Asafe: lê a tela, clica, digita, envia, rola e espera.
+Especificação: [`docs/CONTROLE.md`](docs/CONTROLE.md).
+
+- `asafe-controle.js` — entende as ordens e mostra cada operação num cartão com os passos, **Parar** e **Confirmar/Cancelar**
+- `integrations/asafe-ui.js` — módulo pronto para o agente controlado (Miquéias) implementar `ui.*`
+
+Exemplos: `Miquéias, leia a tela` · `Miquéias, clique em Nova conversa; digite "Olá" e depois envie; espere a resposta`
+
+## Arquivo único
+`python3 tools/build-single.py` gera `dist/horacio.html` com tudo embutido, para abrir com dois cliques no Chrome.
